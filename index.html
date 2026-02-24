@@ -14,15 +14,15 @@
         :root { --bhagwa: #ff9933; --bg-dark: #080a0f; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: #ffffff; margin: 0; overflow-x: hidden; }
         
-        /* ✨ Animations */
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(255, 153, 51, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0); } }
         
-        /* 🎨 UI Elements */
         .welcome-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1a1a1a 0%, #080a0f 100%); text-align: center; padding: 20px; }
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 153, 51, 0.2); border-radius: 28px; }
-        .m-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; width: 100%; color: white; outline: none; }
+        .m-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; width: 100%; color: white; outline: none; transition: 0.3s; }
+        .m-input:focus { border-color: var(--bhagwa); background: rgba(255, 255, 255, 0.08); }
         .btn-bhagwa { background: linear-gradient(135deg, #ff9933, #cc5500); color: white; font-weight: 800; text-transform: uppercase; border-radius: 16px; padding: 18px; width: 100%; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(255, 153, 51, 0.2); transition: 0.2s; }
+        .btn-bhagwa:active { transform: scale(0.98); }
         
         .profile-circle { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--bhagwa); cursor: pointer; object-fit: cover; background: #222; }
         .edit-row { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: rgba(255,255,255,0.03); border-radius: 16px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
@@ -30,7 +30,6 @@
         .active-tab { background: var(--bhagwa) !important; color: white !important; }
         .pay-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(12px); }
         
-        /* 📄 PDF Engine */
         #hidden-receipt-wrapper { position: fixed; top: 0; left: 0; opacity: 0.01; z-index: -100; pointer-events: none; display: none; justify-content: center; width: 100%; }
         #receipt-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 15mm; border: 10px solid var(--bhagwa); position: relative; }
         .stamp { position: absolute; top: 12%; right: 8%; width: 140px; height: 140px; border: 6px solid; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; transform: rotate(-20deg); opacity: 0.2; }
@@ -45,7 +44,7 @@
         <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-32 mx-auto rounded-[40px] shadow-[0_20px_50px_rgba(255,153,51,0.3)] border-2 border-white/10 mb-6" crossorigin="anonymous">
         <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-xs mb-2">Verified Client Access</h4>
         <h1 class="text-3xl md:text-5xl font-black text-white uppercase italic leading-tight">
-            Welcome to the <br> <span class="text-[#ff9933]">Customer Service Portal</span> <br> <small class="text-lg opacity-50">of Patel Traders</small>
+            Welcome to the <br> <span class="text-[#ff9933]">Customer Service Portal</span>
         </h1>
     </div>
     <button onclick="enterVault()" class="btn-bhagwa px-12 py-5 tracking-[3px] animate-[pulse-glow_2s_infinite]">Access My Vault →</button>
@@ -69,14 +68,14 @@
                 <input type="checkbox" id="checkL" class="mt-1 accent-[#ff9933] w-4 h-4 cursor-pointer">
                 <label for="checkL" class="text-[10px] text-white/50 font-bold leading-tight cursor-pointer">I agree to the Digital Service Terms of Patel Traders.</label>
             </div>
-            <button onclick="handleLogin()" class="btn-bhagwa w-full">Unlock Account</button>
+            <button id="btnLogin" onclick="handleLogin()" class="btn-bhagwa w-full">Unlock Account</button>
         </div>
         
         <div id="boxR" class="space-y-4" style="display: none;">
-            <input type="text" id="rN" placeholder="Full Name" class="m-input">
+            <input type="text" id="rN" placeholder="Full Name (Exactly as on Bill)" class="m-input">
             <input type="tel" id="rPh" placeholder="10-Digit Mobile Number" class="m-input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-            <input type="text" id="rU" placeholder="Username" class="m-input">
-            <input type="password" id="rP" placeholder="Password" class="m-input">
+            <input type="text" id="rU" placeholder="Create Username" class="m-input">
+            <input type="password" id="rP" placeholder="Create Password" class="m-input">
             <div class="flex items-start gap-2 py-2">
                 <input type="checkbox" id="checkR" class="mt-1 accent-[#ff9933] w-4 h-4 cursor-pointer">
                 <label for="checkR" class="text-[10px] text-white/50 font-bold leading-tight cursor-pointer">I confirm my details are correct for legal invoicing.</label>
@@ -247,6 +246,7 @@
         const u = document.getElementById('lU').value.trim(), p = document.getElementById('lP').value.trim();
         if(!u || !p) return alert("Please enter credentials.");
         
+        document.getElementById('btnLogin').innerText = "Unlocking...";
         try {
             const res = await fetch(`${CONFIG.URL}?action=getUsers`);
             const users = await res.json();
@@ -258,6 +258,7 @@
                 showDashboard(); 
             } else { alert("❌ Access Denied: Incorrect Username or Password."); }
         } catch(e) { alert("Server Error! Check connection."); }
+        document.getElementById('btnLogin').innerText = "Unlock Account";
     }
 
     // 🛡️ STRICT REGISTRATION & ANTI-DUPLICATE
@@ -288,7 +289,6 @@
             
             await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
             
-            // Show Success Page
             document.getElementById('view-auth').style.display = 'none';
             document.getElementById('successID').innerText = cid;
             document.getElementById('view-success').style.display = 'flex';
@@ -323,19 +323,18 @@
         document.getElementById('modalID').innerText = activeU.custid;
     }
 
-    // ✏️ EDIT FIELDS & UPDATE DATABASE (New Feature)
+    // ✏️ EDIT FIELDS AND SAVE TO DATABASE
     function editField(f) {
         let pMsg = f === 'email' ? "Enter your Email ID:" : "Enter your Date of Birth (DD/MM/YYYY):";
         let val = prompt(pMsg, activeU[f] || "");
         if(val !== null && val.trim() !== "") {
             activeU[f] = val.trim(); 
             updateUI();
-            // Send update to Google Sheet
             fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "UPDATE_USER", user: activeU.user, field: f, newVal: val.trim() }) });
         }
     }
 
-    // 📸 NATIVE GALLERY UPLOAD & UPDATE DATABASE
+    // 📸 UPLOAD PHOTO AND SAVE TO DATABASE
     function handlePhotoUpload(e) {
         const file = e.target.files[0]; if(!file) return;
         const reader = new FileReader();
@@ -348,7 +347,6 @@
                 activeU.photo = b64; 
                 localStorage.setItem('photo_' + activeU.custid, b64);
                 updateUI();
-                // Send photo update to Google Sheet
                 fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "UPDATE_USER", user: activeU.user, field: 'photo', newVal: b64 }) });
             }; img.src = re.target.result;
         }; reader.readAsDataURL(file);
@@ -357,7 +355,7 @@
     function openProfile() { document.getElementById('profile-modal').style.display = 'flex'; }
     function closeProfile() { document.getElementById('profile-modal').style.display = 'none'; }
 
-    // 🔄 LOAD BOTH PAID AND UNPAID BILLS
+    // 🔄 LOAD BILLS WITH DUAL MATCH (NAME + PHONE)
     async function loadVault() {
         const gP = document.getElementById('pGrid'), gU = document.getElementById('uGrid');
         gP.innerHTML = gU.innerHTML = `<p class='animate-pulse text-[10px] opacity-40 uppercase'>Syncing Data...</p>`;
@@ -365,9 +363,14 @@
             const res = await fetch(`${CONFIG.URL}?action=getBills`);
             dbRecs = await res.json();
             
-            // Match based on phone number
-            const myPh = String(activeU.phone).slice(-10);
-            const mine = dbRecs.filter(r => String(r.phone).slice(-10) === myPh).reverse();
+            const myPh = String(activeU.phone).replace(/\D/g, '').slice(-10);
+            const myNm = String(activeU.name).trim().toLowerCase();
+
+            const mine = dbRecs.filter(r => {
+                const bPh = String(r.phone || "").replace(/\D/g, '').slice(-10);
+                const bNm = String(r.name || "").trim().toLowerCase();
+                return (bPh === myPh) && (bNm === myNm);
+            }).reverse();
             
             gU.innerHTML = mine.filter(x => x.mode !== 'PAID').map(r => `
                 <div class="glass-card p-6 border-b-4 border-rose-500 hover:bg-white/5 transition">
