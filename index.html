@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PT | Customer Service Portal</title>
+    <title>Customer Vault | Patel Traders</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -14,28 +14,25 @@
         :root { --bhagwa: #ff9933; --bg-dark: #080a0f; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: #ffffff; margin: 0; overflow-x: hidden; }
         
-        /* Animations & Screens */
+        /* ✨ Animations */
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(255, 153, 51, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0); } }
         
+        /* 🎨 UI Elements */
         .welcome-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1a1a1a 0%, #080a0f 100%); text-align: center; padding: 20px; }
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 153, 51, 0.2); border-radius: 28px; }
         .m-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; width: 100%; color: white; outline: none; }
-        .btn-bhagwa { background: linear-gradient(135deg, #ff9933, #cc5500); color: white; font-weight: 800; text-transform: uppercase; border-radius: 16px; padding: 18px; width: 100%; cursor: pointer; border: none; transition: 0.2s; box-shadow: 0 10px 20px rgba(255, 153, 51, 0.2); }
-        .btn-bhagwa:active { transform: scale(0.96); }
-
-        /* Profile & Edit UI */
-        .profile-circle { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--bhagwa); cursor: pointer; object-fit: cover; background: #222; transition: 0.3s; }
-        .profile-circle:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(255,153,51,0.5); }
-        .edit-row { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: rgba(255,255,255,0.03); border-radius: 16px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
-        .pencil-icon { cursor: pointer; color: var(--bhagwa); opacity: 0.7; transition: 0.3s; }
-        .pencil-icon:hover { opacity: 1; transform: scale(1.1); }
+        .btn-bhagwa { background: linear-gradient(135deg, #ff9933, #cc5500); color: white; font-weight: 800; text-transform: uppercase; border-radius: 16px; padding: 18px; width: 100%; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(255, 153, 51, 0.2); transition: 0.2s; }
+        
+        .profile-circle { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--bhagwa); cursor: pointer; object-fit: cover; background: #222; }
+        .edit-row { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: rgba(255,255,255,0.03); border-radius: 16px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .edit-row:hover { background: rgba(255,255,255,0.05); }
         .active-tab { background: var(--bhagwa) !important; color: white !important; }
         .pay-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(12px); }
         
-        /* PDF Engine */
+        /* 📄 PDF Engine */
         #hidden-receipt-wrapper { position: fixed; top: 0; left: 0; opacity: 0.01; z-index: -100; pointer-events: none; display: none; justify-content: center; width: 100%; }
-        #receipt-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 15mm; border: 10px solid var(--bhagwa); position: relative; box-sizing: border-box; margin: 0 auto; }
+        #receipt-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 15mm; border: 10px solid var(--bhagwa); position: relative; }
         .stamp { position: absolute; top: 12%; right: 8%; width: 140px; height: 140px; border: 6px solid; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; transform: rotate(-20deg); opacity: 0.2; }
         .qr-card { background: #0f172a; color: white; border-radius: 20px; padding: 15px; display: flex; align-items: center; gap: 15px; margin-top: 20px; border-left: 8px solid #ff9933; }
         .warning-text { color: #e11d48; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
@@ -101,9 +98,7 @@
             <p class="text-[10px] text-white/40 uppercase font-black tracking-widest mb-2">Your Customer ID</p>
             <p id="successID" class="text-3xl font-black text-[#ff9933] tracking-[2px]">PT-V-000000</p>
         </div>
-        
-        <p class="text-[10px] text-white/50 mb-6">You will be redirected shortly, or click below to login.</p>
-        <button onclick="goToLogin()" class="w-full py-4 bg-[#4ade80] hover:bg-[#22c55e] rounded-2xl text-white font-black text-sm uppercase tracking-widest transition-all shadow-lg shadow-[#4ade80]/30">Home / Login</button>
+        <button onclick="goToLogin()" class="w-full py-4 bg-[#4ade80] hover:bg-[#22c55e] rounded-2xl text-white font-black text-sm uppercase tracking-widest transition-all">Home / Login</button>
     </div>
 </div>
 
@@ -116,17 +111,17 @@
                 <p id="dashID" class="text-[9px] font-bold text-[#ff9933] tracking-[3px] uppercase">PT-V-000000</p>
             </div>
         </div>
-        <button onclick="location.reload()" class="bg-rose-500/10 hover:bg-rose-500/20 transition text-rose-500 text-[10px] font-black px-5 py-2 rounded-xl uppercase">Logout</button>
+        <button onclick="location.reload()" class="bg-rose-500/10 text-rose-500 text-[10px] font-black px-5 py-2 rounded-xl uppercase hover:bg-rose-500/20 transition">Logout</button>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-10">
             <div id="uSection">
-                <h3 class="text-rose-500 font-black uppercase text-[10px] tracking-[4px] mb-4 flex items-center gap-2">🔴 Unpaid Invoices</h3>
+                <h3 class="text-rose-500 font-black uppercase text-[10px] tracking-[4px] mb-4">🔴 Unpaid Invoices</h3>
                 <div id="uGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
             <div id="pSection">
-                <h3 class="text-emerald-500 font-black uppercase text-[10px] tracking-[4px] mb-4 flex items-center gap-2">🟢 Paid History</h3>
+                <h3 class="text-emerald-500 font-black uppercase text-[10px] tracking-[4px] mb-4">🟢 Paid History</h3>
                 <div id="pGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
         </div>
@@ -155,16 +150,16 @@
 
         <div class="space-y-2">
             <div class="edit-row">
-                <div><p class="text-[8px] text-white/30 font-black uppercase">Your Name</p><p id="valName" class="text-sm font-bold text-white">---</p></div>
-                <div class="pencil-icon" onclick="editField('name')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></div>
-            </div>
-            <div class="edit-row">
                 <div><p class="text-[8px] text-white/30 font-black uppercase">Email Address</p><p id="valEmail" class="text-sm font-bold text-white">Not Set</p></div>
-                <div class="pencil-icon" onclick="editField('email')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></div>
+                <div class="cursor-pointer text-[#ff9933] opacity-70 hover:opacity-100 hover:scale-110 transition" onclick="editField('email')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                </div>
             </div>
             <div class="edit-row">
                 <div><p class="text-[8px] text-white/30 font-black uppercase">Date of Birth</p><p id="valDOB" class="text-sm font-bold text-white">DD/MM/YYYY</p></div>
-                <div class="pencil-icon" onclick="editField('dob')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></div>
+                <div class="cursor-pointer text-[#ff9933] opacity-70 hover:opacity-100 hover:scale-110 transition" onclick="editField('dob')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                </div>
             </div>
             <div class="edit-row opacity-30">
                 <div><p class="text-[8px] text-rose-400 font-black uppercase">Linked Mobile (Locked)</p><p id="valPhone" class="text-sm font-bold text-white">---</p></div>
@@ -216,6 +211,7 @@
         </div>
 
         <div class="mt-12 pt-6 border-t border-dashed border-slate-300 text-center">
+            <h3 class="text-xs font-black text-slate-800 uppercase tracking-[5px] mb-2">Furniture Shop</h3>
             <p class="warning-text">⚠️ RECEIPT WILL BE INVALID IF MODIFIED</p>
             <p class="text-[8px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">Digitally Generated by Patel Traders</p>
         </div>
@@ -226,7 +222,7 @@
     <div class="glass-card p-10 max-w-sm w-full text-center border-t-8 border-[#ff9933]" onclick="event.stopPropagation()">
         <p class="text-white/40 text-[10px] uppercase font-black mb-1">Payable Due Amount</p>
         <p id="pmAmt" class="text-5xl font-black text-[#ff9933] mb-8 tracking-tighter"></p>
-        <div class="bg-white p-4 rounded-[40px] inline-block mb-6 shadow-[0_0_50px_rgba(255,153,51,0.2)]"><img id="pmQR" src="" class="w-48 h-48 rounded-xl"></div>
+        <div class="bg-white p-4 rounded-[40px] inline-block mb-6 shadow-2xl"><img id="pmQR" src="" class="w-48 h-48 rounded-xl"></div>
         <p class="text-white/60 text-[10px] uppercase font-bold tracking-widest mb-6 italic">Verified Paytm Merchant Account</p>
         <button onclick="closePayModal()" class="w-full py-4 bg-white/10 rounded-2xl text-white font-black text-xs uppercase tracking-[3px] hover:bg-white/20 transition">Close Scanner</button>
     </div>
@@ -236,12 +232,8 @@
     const CONFIG = { URL: "https://script.google.com/macros/s/AKfycbyqGgozh6soglW6b_8s7LSr96_gIGNaweAnG1CQn-_F5HytVi9pYGi3GDX-lSz-mEyD/exec" };
     let activeU = null, dbRecs = [];
 
-    // 🏆 NAVIGATION LOGIC
-    function enterVault() {
-        document.getElementById('view-welcome').style.display = 'none';
-        document.getElementById('view-auth').style.display = 'flex';
-    }
-
+    // 🏆 NAVIGATION
+    function enterVault() { document.getElementById('view-welcome').style.display = 'none'; document.getElementById('view-auth').style.display = 'flex'; }
     function toggleAuth(t) {
         document.getElementById('boxL').style.display = t === 'login' ? 'block' : 'none';
         document.getElementById('boxR').style.display = t === 'reg' ? 'block' : 'none';
@@ -310,42 +302,40 @@
         }
     }
 
-    // 🎉 Return to Login from Success
-    function goToLogin() {
-        document.getElementById('view-success').style.display = 'none';
-        document.getElementById('view-auth').style.display = 'flex';
-        toggleAuth('login');
-    }
-
+    function goToLogin() { document.getElementById('view-success').style.display = 'none'; document.getElementById('view-auth').style.display = 'flex'; toggleAuth('login'); }
+    
     function showDashboard() {
         document.getElementById('view-auth').style.display = 'none';
         document.getElementById('view-dashboard').style.display = 'block';
         updateUI(); loadVault();
     }
 
+    // 🎨 UPDATE PROFILE UI
     function updateUI() {
         const ava = activeU.photo || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
         document.getElementById('dashWelcome').innerText = activeU.name;
         document.getElementById('dashID').innerText = activeU.custid;
         document.getElementById('navAvatar').src = document.getElementById('modalAvatar').src = ava;
-        document.getElementById('modalName').innerText = document.getElementById('valName').innerText = activeU.name;
+        document.getElementById('modalName').innerText = activeU.name;
         document.getElementById('valEmail').innerText = activeU.email || "Not Set";
         document.getElementById('valDOB').innerText = activeU.dob || "DD/MM/YYYY";
         document.getElementById('valPhone').innerText = activeU.phone;
         document.getElementById('modalID').innerText = activeU.custid;
     }
 
-    // ✏️ EDIT PROFILE FIELDS
+    // ✏️ EDIT FIELDS & UPDATE DATABASE (New Feature)
     function editField(f) {
-        let pMsg = f === 'name' ? "Full Name:" : f === 'email' ? "Email ID:" : "Date of Birth (DD/MM/YYYY):";
-        let val = prompt("Update " + pMsg, activeU[f]);
+        let pMsg = f === 'email' ? "Enter your Email ID:" : "Enter your Date of Birth (DD/MM/YYYY):";
+        let val = prompt(pMsg, activeU[f] || "");
         if(val !== null && val.trim() !== "") {
-            activeU[f] = val.trim(); updateUI();
-            fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "UPDATE_USER", user: activeU.user, field: f, newVal: val }) });
+            activeU[f] = val.trim(); 
+            updateUI();
+            // Send update to Google Sheet
+            fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "UPDATE_USER", user: activeU.user, field: f, newVal: val.trim() }) });
         }
     }
 
-    // 📸 NATIVE GALLERY UPLOAD
+    // 📸 NATIVE GALLERY UPLOAD & UPDATE DATABASE
     function handlePhotoUpload(e) {
         const file = e.target.files[0]; if(!file) return;
         const reader = new FileReader();
@@ -358,7 +348,7 @@
                 activeU.photo = b64; 
                 localStorage.setItem('photo_' + activeU.custid, b64);
                 updateUI();
-                
+                // Send photo update to Google Sheet
                 fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "UPDATE_USER", user: activeU.user, field: 'photo', newVal: b64 }) });
             }; img.src = re.target.result;
         }; reader.readAsDataURL(file);
@@ -367,12 +357,15 @@
     function openProfile() { document.getElementById('profile-modal').style.display = 'flex'; }
     function closeProfile() { document.getElementById('profile-modal').style.display = 'none'; }
 
+    // 🔄 LOAD BOTH PAID AND UNPAID BILLS
     async function loadVault() {
         const gP = document.getElementById('pGrid'), gU = document.getElementById('uGrid');
         gP.innerHTML = gU.innerHTML = `<p class='animate-pulse text-[10px] opacity-40 uppercase'>Syncing Data...</p>`;
         try {
             const res = await fetch(`${CONFIG.URL}?action=getBills`);
             dbRecs = await res.json();
+            
+            // Match based on phone number
             const myPh = String(activeU.phone).slice(-10);
             const mine = dbRecs.filter(r => String(r.phone).slice(-10) === myPh).reverse();
             
@@ -405,14 +398,13 @@
     }
     function closePayModal() { document.getElementById('payModal').style.display = 'none'; }
 
-    // Helper to fix dirty ISO dates
     function formatDate(dStr) {
         if(!dStr) return "--";
         if(dStr.includes('T')) return dStr.split('T')[0].split('-').reverse().join('/');
         return dStr;
     }
 
-    // 🖨️ PDF GENERATOR ENGINE (BUGS FIXED)
+    // 🖨️ PDF GENERATOR ENGINE
     function generatePDF(idx) {
         const r = dbRecs[idx]; const wrap = document.getElementById('hidden-receipt-wrapper');
         wrap.style.display = 'flex'; 
@@ -420,11 +412,8 @@
         document.getElementById('vName').innerText = r.name || "Customer";
         document.getElementById('vPhone').innerText = r.phone || "--";
         document.getElementById('vInv').innerText = r.inv || "#--"; 
-        
-        // 🎯 FIX: Ensuring base amount and total are correctly displayed
         document.getElementById('vTotal').innerText = r.total || "₹ 0";
         document.getElementById('vBase').innerText = r.total || "₹ 0"; 
-        
         document.getElementById('vItem').innerText = r.item || "ITEM"; 
         document.getElementById('vDetail').innerText = r.detail || "";
         document.getElementById('vWar').innerText = "Warranty: " + (r.warranty || "None");
