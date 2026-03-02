@@ -8,128 +8,90 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
         
-        :root { 
-            --bhagwa: #ff9933; 
-            --bg-dark: #080a0f; 
-        }
+        :root { --bhagwa: #ff9933; --bg-dark: #080a0f; }
         
+        /* 🔥 Background with Subtle Ashoka Chakra & Bhagwa Glow */
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg-dark); 
+            background-color: var(--bg-dark); 
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.04"><circle cx="50" cy="50" r="45" stroke="%23ff9933" stroke-width="2" fill="none"/><path d="M50 5 L50 95 M5 50 L95 50 M18 18 L82 82 M18 82 L82 18 M32.5 8.5 L67.5 91.5 M8.5 32.5 L91.5 67.5 M8.5 67.5 L91.5 32.5 M32.5 91.5 L67.5 8.5" stroke="%23ff9933" stroke-width="1"/></svg>');
+            background-size: 80vw;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: #ffffff; 
             margin: 0; 
             overflow-x: hidden; 
+            box-shadow: inset 0 0 200px rgba(255, 153, 51, 0.03);
         }
         
-        @keyframes fadeInDown { 
-            from { opacity: 0; transform: translateY(-30px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
         
-        @keyframes pulse-glow { 
-            0% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.4); } 
-            70% { box-shadow: 0 0 0 20px rgba(255, 153, 51, 0); } 
-            100% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0); } 
-        }
-        
-        .welcome-screen { 
-            min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            background: radial-gradient(circle at center, #1a1a1a 0%, #080a0f 100%); text-align: center; padding: 20px; 
-        }
-        
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 153, 51, 0.2); border-radius: 28px; 
-        }
-        
-        .m-input { 
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; 
-            padding: 16px; width: 100%; color: white; outline: none; transition: 0.3s; 
-        }
-        
+        .welcome-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .m-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; width: 100%; color: white; outline: none; transition: 0.3s; font-size: 13px; }
         .m-input:focus { border-color: var(--bhagwa); background: rgba(255, 255, 255, 0.08); }
-        
-        .btn-bhagwa { 
-            background: linear-gradient(135deg, #ff9933, #cc5500); color: white; font-weight: 800; 
-            text-transform: uppercase; border-radius: 16px; padding: 18px; width: 100%; cursor: pointer; 
-            border: none; box-shadow: 0 10px 20px rgba(255, 153, 51, 0.2); transition: 0.2s; 
-        }
-        
+        .btn-bhagwa { background: linear-gradient(135deg, #ff9933, #e65c00); color: white; font-weight: 800; text-transform: uppercase; border-radius: 12px; padding: 16px; width: 100%; cursor: pointer; border: none; box-shadow: 0 8px 20px rgba(255, 153, 51, 0.2); transition: 0.2s; letter-spacing: 1px; }
         .btn-bhagwa:active { transform: scale(0.98); }
-        
-        .profile-circle { 
-            width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--bhagwa); 
-            cursor: pointer; object-fit: cover; background: #222; 
-        }
-        
-        .edit-row { 
-            display: flex; align-items: center; justify-content: space-between; padding: 14px; 
-            background: rgba(255,255,255,0.03); border-radius: 16px; margin-bottom: 8px; 
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; 
-        }
-        
-        .edit-row:hover { background: rgba(255,255,255,0.05); }
+        .profile-circle { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--bhagwa); cursor: pointer; object-fit: cover; background: #222; }
+        .edit-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.02); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); transition: 0.3s; }
         .active-tab { background: var(--bhagwa) !important; color: white !important; }
+        .pay-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(10px); padding: 20px; }
         
-        .pay-modal { 
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10000; 
-            align-items: center; justify-content: center; backdrop-filter: blur(12px); 
-        }
-        
-        #hidden-receipt-wrapper { 
-            position: fixed; top: 0; left: 0; opacity: 0.01; z-index: -100; pointer-events: none; 
-            display: none; justify-content: center; width: 100%; 
-        }
-        
-        #receipt-render { 
-            width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 15mm; 
-            border: 10px solid var(--bhagwa); position: relative; 
-        }
-        
-        .stamp { 
-            position: absolute; top: 12%; right: 8%; width: 140px; height: 140px; border: 6px solid; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            font-weight: 900; font-size: 28px; transform: rotate(-20deg); opacity: 0.2; 
-        }
-        
-        .qr-card { 
-            background: #0f172a; color: white; border-radius: 20px; padding: 15px; display: flex; 
-            align-items: center; gap: 15px; margin-top: 20px; border-left: 8px solid #ff9933; 
-        }
-        
-        .warning-text { color: #e11d48; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* 🔥 Added Styles for Legal Modal & Sample Cards */
-        .sample-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,153,51,0.3); border-radius: 20px; padding: 15px; margin-bottom: 12px; }
-        .legal-content::-webkit-scrollbar { width: 4px; }
-        .legal-content::-webkit-scrollbar-thumb { background: #ff9933; border-radius: 10px; }
+        /* 🔥 Professional Pro-Cards for Invoices */
+        .pro-card { background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; transition: transform 0.2s; }
+        .pro-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.1); }
+        .badge-due { position: absolute; top: 20px; right: 20px; background: rgba(244, 63, 94, 0.15); color: #f43f5e; padding: 4px 10px; border-radius: 8px; font-size: 9px; font-weight: 900; letter-spacing: 1px; }
+        .badge-paid { position: absolute; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 4px 10px; border-radius: 8px; font-size: 9px; font-weight: 900; letter-spacing: 1px; }
+
+        /* 🔥 Big Status Modal */
+        .big-status-box { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; text-align: center; }
+
+        #hidden-receipt-wrapper, #hidden-statement-wrapper { position: fixed; top: 0; left: 0; opacity: 0.01; z-index: -100; pointer-events: none; display: none; justify-content: center; width: 100%; }
+        #receipt-render, #statement-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 15mm; border: 10px solid var(--bhagwa); position: relative; }
+        .stamp { position: absolute; top: 12%; right: 8%; width: 140px; height: 140px; border: 6px solid; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; transform: rotate(-20deg); opacity: 0.2; }
     </style>
 </head>
 <body>
 
-    <div id="view-welcome" class="welcome-screen">
-        <div class="mb-8 animate-[fadeInDown_1s_ease-out]">
-            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-32 mx-auto rounded-[40px] shadow-[0_20px_50px_rgba(255,153,51,0.3)] border-2 border-white/10 mb-6" crossorigin="anonymous">
-            <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-xs mb-2">Verified Client Access</h4>
-            <h1 class="text-3xl md:text-5xl font-black text-white uppercase italic leading-tight">
-                Welcome to the <br> <span class="text-[#ff9933]">Customer Service Portal</span>
-            </h1>
+    <div id="big-status-overlay" class="pay-modal" style="z-index: 99999;">
+        <div class="glass-card big-status-box p-10 max-w-sm w-full bg-[#0a0f18]">
+            <div id="bs-icon" class="mb-6"></div>
+            <h2 id="bs-title" class="text-3xl font-black uppercase tracking-tighter mb-2">SUCCESS</h2>
+            <p id="bs-reason" class="text-xs text-white/60 font-medium mb-6 leading-relaxed">Payment Authorized and Synced.</p>
+            <div id="bs-details" class="bg-black/40 p-4 rounded-xl text-left mb-6" style="display:none;">
+                <p class="text-[9px] text-white/40 uppercase font-bold">Transaction ID</p>
+                <p id="bs-txn" class="text-xs font-mono text-[#ff9933] mb-2">---</p>
+                <p class="text-[9px] text-white/40 uppercase font-bold">Date & Time</p>
+                <p id="bs-date" class="text-xs font-mono text-white">---</p>
+            </div>
+            <button onclick="closeBigStatus()" class="btn-bhagwa text-xs py-3 shadow-none bg-white/10 hover:bg-white/20">Acknowledge</button>
         </div>
-        <button onclick="enterVault()" class="btn-bhagwa px-12 py-5 tracking-[3px] animate-[pulse-glow_2s_infinite]">Access My Vault →</button>
     </div>
 
-    <div id="view-auth" class="min-h-screen flex flex-col items-center justify-center p-4 py-20" style="display: none;">
-        <div class="text-center mb-8">
-            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-20 mx-auto rounded-3xl mb-4 shadow-xl" crossorigin="anonymous">
-            <h1 class="text-2xl font-black italic uppercase">Vault <span class="text-[#ff9933]">Security</span></h1>
+    <div id="view-welcome" class="welcome-screen">
+        <div class="mb-8 animate-[fadeInDown_1s_ease-out]">
+            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-28 mx-auto rounded-[35px] shadow-[0_15px_40px_rgba(255,153,51,0.2)] border border-white/10 mb-6" crossorigin="anonymous">
+            <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-[10px] mb-2">Client Access Portal</h4>
+            <h1 class="text-3xl md:text-5xl font-black text-white uppercase italic leading-tight">Patel Traders</h1>
+        </div>
+        <button onclick="enterVault()" class="btn-bhagwa px-12 py-4 tracking-[3px] max-w-xs">Access Vault →</button>
+    </div>
+
+    <div id="view-auth" class="min-h-screen flex flex-col items-center justify-center p-4 py-12" style="display: none;">
+        <div class="text-center mb-6">
+            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-16 mx-auto rounded-2xl mb-3 shadow-xl" crossorigin="anonymous">
+            <h1 class="text-xl font-black italic uppercase">Digital <span class="text-[#ff9933]">Vault</span></h1>
         </div>
         
-        <div class="glass-card p-8 w-full max-w-sm">
-            <div class="flex gap-2 mb-8 bg-black/40 p-1 rounded-xl">
+        <div class="glass-card p-6 md:p-8 w-full max-w-sm">
+            <div class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
                 <button id="tL" onclick="toggleAuth('login')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab">Login</button>
                 <button id="tR" onclick="toggleAuth('reg')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40">Register</button>
             </div>
@@ -137,522 +99,436 @@
             <div id="boxL" class="space-y-4">
                 <input type="text" id="lU" placeholder="Username" class="m-input">
                 <input type="password" id="lP" placeholder="Password" class="m-input">
-                <div class="flex items-start gap-2 py-2">
-                    <input type="checkbox" id="checkL" class="mt-1 accent-[#ff9933] w-4 h-4 cursor-pointer">
-                    <label for="checkL" class="text-[10px] text-white/50 font-bold leading-tight cursor-pointer">I agree to the Digital Service Terms of Patel Traders.</label>
+                <div class="flex items-start gap-2 py-1">
+                    <input type="checkbox" id="checkL" class="mt-1 accent-[#ff9933] w-3 h-3 cursor-pointer">
+                    <label for="checkL" class="text-[9px] text-white/50 font-bold leading-tight cursor-pointer">I agree to the Digital Service Terms.</label>
                 </div>
-                <button id="btnLogin" onclick="handleLogin()" class="btn-bhagwa w-full">Unlock Account</button>
+                <button id="btnLogin" onclick="handleLogin()" class="btn-bhagwa w-full py-3 text-xs">Unlock Account</button>
+                <p onclick="handleForgetPass()" class="text-[9px] text-[#ff9933] cursor-pointer text-center mt-4 uppercase tracking-[2px] font-bold hover:scale-105 transition">Forgot Password?</p>
             </div>
             
-            <div id="boxR" class="space-y-4" style="display: none;">
-                <input type="text" id="rN" placeholder="Full Name (Exactly as on Bill)" class="m-input">
-                <input type="tel" id="rPh" placeholder="10-Digit Mobile Number" class="m-input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                <input type="text" id="rU" placeholder="Create Username" class="m-input">
-                <input type="password" id="rP" placeholder="Create Password" class="m-input">
-                <div class="flex items-start gap-2 py-2">
-                    <input type="checkbox" id="checkR" class="mt-1 accent-[#ff9933] w-4 h-4 cursor-pointer">
-                    <label for="checkR" class="text-[10px] text-white/50 font-bold leading-tight cursor-pointer">I confirm my details are correct for legal invoicing.</label>
+            <div id="boxR" class="space-y-3" style="display: none;">
+                <input type="text" id="rN" placeholder="Full Name" class="m-input py-3">
+                <input type="tel" id="rPh" placeholder="10-Digit Mobile" class="m-input py-3" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <input type="tel" id="rAadhaar" placeholder="12-Digit Aadhaar (Optional)" class="m-input py-3" maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <input type="text" id="rU" placeholder="Create Username" class="m-input py-3">
+                <input type="password" id="rP" placeholder="Create Password" class="m-input py-3">
+                <div class="flex items-start gap-2 py-1">
+                    <input type="checkbox" id="checkR" class="mt-1 accent-[#ff9933] w-3 h-3 cursor-pointer">
+                    <label for="checkR" class="text-[9px] text-white/50 font-bold leading-tight cursor-pointer">I confirm details are correct for legal invoicing.</label>
                 </div>
-                <button id="regBtn" onclick="handleReg()" class="btn-bhagwa w-full">Create Vault</button>
+                <button id="regBtn" onclick="handleReg()" class="btn-bhagwa w-full py-3 text-xs">Create Vault</button>
             </div>
         </div>
 
-        <div class="mt-12 w-full max-w-sm">
-            <h3 class="text-[#ff9933] font-black uppercase text-[10px] tracking-[4px] mb-6 text-center">Verification Demo / सैंपल बिल</h3>
-            
-            <div class="sample-card border-emerald-500/30 bg-emerald-500/5">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-[8px] font-black text-emerald-500 uppercase mb-1">Invoice #PT-TEST-001</p>
-                        <p class="text-sm font-bold text-white">Sample Customer A</p>
-                        <p class="text-[9px] text-white/40">Status: Fully Paid</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-lg font-black text-emerald-400">₹10.00</p>
-                        <span class="text-[8px] bg-emerald-500 text-white px-2 py-1 rounded-md font-black uppercase">PAID</span>
-                    </div>
-                </div>
+        <footer class="mt-12 text-center border-t border-white/5 pt-6 w-full max-w-sm">
+            <div class="flex flex-wrap justify-center gap-4 text-[8px] font-bold text-white/40 uppercase tracking-widest mb-4">
+                <button onclick="openLegal('privacy')" class="hover:text-[#ff9933]">Privacy Policy</button>
+                <button onclick="openLegal('terms')" class="hover:text-[#ff9933]">Terms</button>
+                <button onclick="openLegal('refund')" class="hover:text-[#ff9933]">Refund Policy</button>
             </div>
-
-            <div class="sample-card border-rose-500/30 bg-rose-500/5">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-[8px] font-black text-rose-500 uppercase mb-1">Invoice #PT-TEST-002</p>
-                        <p class="text-sm font-bold text-white">Sample Customer B</p>
-                        <p class="text-[9px] text-white/40">Status: Payment Due</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-lg font-black text-rose-400">₹10.00</p>
-                        <button onclick="openDemoPayModal()" class="text-[8px] bg-rose-500 text-white px-2 py-1 rounded-md font-black uppercase hover:scale-105 transition">PAY NOW</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="mt-12 text-center border-t border-white/5 pt-8 w-full max-w-sm">
-            <div class="flex flex-wrap justify-center gap-4 text-[9px] font-bold text-white/40 uppercase tracking-widest mb-6">
-                <button onclick="openLegal('privacy')" class="hover:text-[#ff9933] uppercase">Privacy Policy</button>
-                <button onclick="openLegal('terms')" class="hover:text-[#ff9933] uppercase">Terms & Conditions</button>
-                <button onclick="openLegal('refund')" class="hover:text-[#ff9933] uppercase">Refund Policy</button>
-                <button onclick="openLegal('contact')" class="hover:text-[#ff9933] uppercase">Contact Us</button>
-            </div>
-            <p class="text-[8px] text-white/20 font-medium">
-                401, Gandhinagar, Talgram, PO-Talgram, Kannauj (U.P.) - 209731 <br>
-                © 2026 PATEL TRADERS | SECURE BILLING PORTAL
-            </p>
+            <p class="text-[7px] text-white/20 font-medium tracking-widest">© 2026 PATEL TRADERS</p>
         </footer>
     </div>
 
-    <div id="view-success" class="min-h-screen flex flex-col items-center justify-center p-4" style="display: none;">
-        <div class="glass-card p-10 w-full max-w-sm text-center border-t-8 border-[#4ade80] bg-gradient-to-b from-white/5 to-transparent">
-            <div class="w-24 h-24 bg-[#4ade80] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(74,222,128,0.4)]">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <h2 class="text-3xl font-black text-white mb-2">Thank You!</h2>
-            <p class="text-sm font-bold text-[#4ade80] uppercase tracking-widest mb-8">Account Created Successfully</p>
-            
-            <div class="bg-black/50 p-6 rounded-3xl mb-8 border border-white/10">
-                <p class="text-[10px] text-white/40 uppercase font-black tracking-widest mb-2">Your Customer ID</p>
-                <p id="successID" class="text-3xl font-black text-[#ff9933] tracking-[2px]">PT-V-000000</p>
-            </div>
-            <button onclick="goToLogin()" class="w-full py-4 bg-[#4ade80] hover:bg-[#22c55e] rounded-2xl text-white font-black text-sm uppercase tracking-widest transition-all">Home / Login</button>
-        </div>
-    </div>
-
-    <div id="view-dashboard" class="max-w-6xl mx-auto p-4 md:p-8" style="display: none;">
-        <div class="flex justify-between items-center mb-8 bg-white/5 p-4 rounded-[30px] border border-white/10">
+    <div id="view-dashboard" class="max-w-5xl mx-auto p-4 md:p-6" style="display: none;">
+        
+        <div class="flex justify-between items-center mb-6 glass-card p-4 border-none bg-white/5">
             <div class="flex items-center gap-4">
-                <img id="navAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-circle" onclick="openProfile()">
+                <img id="navAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-circle w-12 h-12" onclick="openProfile()">
                 <div>
-                    <h2 id="dashWelcome" class="text-lg font-black uppercase italic">User Name</h2>
-                    <p id="dashID" class="text-[9px] font-bold text-[#ff9933] tracking-[3px] uppercase">PT-V-000000</p>
+                    <h2 id="dashWelcome" class="text-md font-black uppercase italic tracking-tight">Name</h2>
+                    <p id="dashID" class="text-[8px] font-bold text-[#ff9933] tracking-[2px] uppercase">ID</p>
                 </div>
             </div>
-            <button onclick="location.reload()" class="bg-rose-500/10 text-rose-500 text-[10px] font-black px-5 py-2 rounded-xl uppercase hover:bg-rose-500/20 transition">Logout</button>
+            <button onclick="location.reload()" class="bg-rose-500/10 text-rose-500 text-[9px] font-black px-4 py-2 rounded-lg uppercase">LOGOUT</button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-10">
-                <div id="uSection">
-                    <h3 class="text-rose-500 font-black uppercase text-[10px] tracking-[4px] mb-4">🔴 Unpaid Invoices</h3>
-                    <div id="uGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </div>
-                <div id="pSection">
-                    <h3 class="text-emerald-500 font-black uppercase text-[10px] tracking-[4px] mb-4">🟢 Paid History</h3>
-                    <div id="pGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="glass-card p-5 md:col-span-1 bg-gradient-to-br from-[#ff9933]/10 to-transparent border-[#ff9933]/30">
+                <p class="text-[9px] uppercase font-black text-white/50 tracking-widest mb-1">Total Lifetime Shopping</p>
+                <h2 id="totalSpend" class="text-3xl font-black text-[#ff9933] tracking-tighter">₹ 0</h2>
+            </div>
+            <div class="glass-card p-5 md:col-span-2 flex flex-col justify-center">
+                <p class="text-[9px] uppercase font-black text-white/50 tracking-widest mb-3">Download Account Statement</p>
+                <div class="flex gap-2">
+                    <select id="stmtMonth" class="m-input py-2 text-xs w-1/3"><option value="ALL">All Months</option><option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+                    <select id="stmtYear" class="m-input py-2 text-xs w-1/3"><option value="ALL">All Years</option><option value="2026">2026</option><option value="2027">2027</option></select>
+                    <button onclick="downloadStatement()" class="btn-bhagwa w-1/3 py-2 text-[9px]">Get PDF</button>
                 </div>
             </div>
-            <div class="space-y-4">
-                <div class="glass-card p-6 border-t-4 border-blue-500 text-center">
-                    <p class="text-[10px] font-black text-blue-400 uppercase mb-4 tracking-widest">Receipt Finder</p>
-                    <input type="text" id="linkInvInput" placeholder="Invoice # (PT-B-XXX)" class="m-input text-xs mb-3 text-center">
-                    <button onclick="linkAndOpenReceipt()" class="btn-bhagwa w-full text-[10px]" style="background: #3b82f6;">Download PDF</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div id="uSection">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div>
+                    <h3 class="text-white font-black uppercase text-xs tracking-widest">Pending Dues</h3>
                 </div>
+                <div id="uGrid" class="space-y-4"></div>
+            </div>
+            
+            <div id="pSection">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <h3 class="text-white font-black uppercase text-xs tracking-widest">Payment History</h3>
+                </div>
+                <div id="pGrid" class="space-y-4"></div>
             </div>
         </div>
     </div>
 
     <div id="profile-modal" class="pay-modal" onclick="closeProfile()">
-        <div class="glass-card p-8 max-w-md w-full mx-4 relative border-t-8 border-[#ff9933]" onclick="event.stopPropagation()">
-            <div class="text-center mb-8">
-                <div class="relative inline-block group">
-                    <img id="modalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="w-24 h-24 rounded-full border-4 border-[#ff9933] object-cover mx-auto mb-4 bg-[#222]">
-                    <div class="absolute bottom-2 right-0 bg-[#ff9933] p-2 rounded-full cursor-pointer hover:scale-110 transition shadow-lg" onclick="document.getElementById('photoUploadInput').click()">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+        <div class="glass-card p-6 w-full max-w-sm mx-4 bg-[#0a0f18] border-t-4 border-[#ff9933]" onclick="event.stopPropagation()">
+            <div class="text-center mb-6">
+                <div class="relative inline-block">
+                    <img id="modalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="w-20 h-20 rounded-full border-2 border-[#ff9933] object-cover bg-[#222]">
+                    <div class="absolute bottom-0 right-0 bg-[#ff9933] p-1.5 rounded-full cursor-pointer" onclick="document.getElementById('photoUploadInput').click()">
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     </div>
                 </div>
-                <h2 id="modalName" class="text-2xl font-black text-white uppercase italic">Full Name</h2>
-                <p id="modalID" class="text-[10px] font-black text-[#ff9933] tracking-[4px]">PT-V-000000</p>
+                <h2 id="modalName" class="text-lg font-black uppercase mt-3">Name</h2>
             </div>
             
-            <div class="space-y-2">
-                <div class="edit-row">
-                    <div><p class="text-[8px] text-white/30 font-black uppercase">Email Address</p><p id="valEmail" class="text-sm font-bold text-white">Not Set</p></div>
-                    <div class="cursor-pointer text-[#ff9933] opacity-70 hover:opacity-100 hover:scale-110 transition" onclick="editField('email')">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                    </div>
+            <div class="space-y-2 mb-6">
+                <div class="edit-row"><div><p class="text-[7px] text-white/30 uppercase font-black">Email</p><p id="valEmail" class="text-xs font-bold">Not Set</p></div><button onclick="editField('email')" class="text-[#ff9933] text-xs">✏️</button></div>
+                <div class="edit-row"><div><p class="text-[7px] text-white/30 uppercase font-black">DOB</p><p id="valDOB" class="text-xs font-bold">Not Set</p></div><button onclick="editField('dob')" class="text-[#ff9933] text-xs">✏️</button></div>
+                
+                <div class="edit-row" id="rowAadhaar">
+                    <div><p class="text-[7px] text-white/30 uppercase font-black">Aadhaar (Govt ID)</p><p id="valAadhaar" class="text-xs font-bold tracking-widest font-mono">XXXX-XXXX-XXXX</p></div>
+                    <button onclick="deleteAadhaar()" class="text-rose-500 text-xs" title="Remove Aadhaar">🗑️</button>
                 </div>
-                <div class="edit-row">
-                    <div><p class="text-[8px] text-white/30 font-black uppercase">Date of Birth</p><p id="valDOB" class="text-sm font-bold text-white">DD/MM/YYYY</p></div>
-                    <div class="cursor-pointer text-[#ff9933] opacity-70 hover:opacity-100 hover:scale-110 transition" onclick="editField('dob')">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                    </div>
-                </div>
-                <div class="edit-row opacity-30">
-                    <div><p class="text-[8px] text-rose-400 font-black uppercase">Linked Mobile (Locked)</p><p id="valPhone" class="text-sm font-bold text-white">---</p></div>
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"/></svg>
+
+                <div class="edit-row opacity-50 bg-black/40 border-none cursor-not-allowed">
+                    <div><p class="text-[7px] text-rose-400 uppercase font-black">Registered Mobile (Locked)</p><p id="valPhone" class="text-xs font-bold">+91 ----------</p></div>
+                    <span class="text-white/30 text-xs">🔒</span>
                 </div>
             </div>
-            <button onclick="closeProfile()" class="w-full mt-6 py-4 bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-[2px] hover:bg-white/20 transition">Save & Close</button>
+            
+            <button onclick="closeProfile()" class="w-full py-3 bg-white/5 rounded-xl text-[9px] font-black uppercase mb-2">Close Profile</button>
         </div>
     </div>
-
     <input type="file" id="photoUploadInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
 
-    <div id="hidden-receipt-wrapper">
-        <div id="receipt-render">
-            <div id="stP" class="stamp" style="color:#10b981; border-color:#10b981;">PAID</div>
-            <div id="stU" class="stamp" style="display:none; color:#ef4444; border-color:#ef4444;">PENDING</div>
-            
-            <div class="flex justify-between border-b-4 pb-6 border-slate-900">
-                <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-20 rounded-xl" crossorigin="anonymous">
-                <div class="text-right uppercase">
-                    <h1 class="text-3xl font-black text-slate-900">Patel Traders</h1>
-                    <p class="text-[9px] font-bold text-slate-700">गांधीनगर, तालग्राम, कन्नौज (U.P.) - 209731</p>
-                    <p class="text-[9px] font-black text-slate-400">Mob: +91 9565697314</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 my-8 font-bold uppercase text-slate-800">
-                <div><p class="text-slate-400 text-[9px]">Client Details</p><h3 id="vName" class="text-2xl font-black italic">Customer</h3><p id="vPhone" class="text-slate-500 text-sm">--</p></div>
-                <div class="text-right text-[10px]">INV: <span id="vInv" class="font-black">#--</span><br>DATE: <span id="vDate">--</span></div>
-            </div>
-
-            <div class="min-h-[160px] border-y-2 py-6 text-xl italic font-black text-slate-900 uppercase">
-                <table class="w-full">
-                    <tr>
-                        <td><span id="vItem">ITEM</span><br><small id="vDetail" class="text-xs normal-case text-slate-400 font-bold"></small><br><span id="vWar" class="text-[10px] text-orange-500">None</span></td>
-                        <td id="vBase" class="text-right font-black">₹ 0</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="mt-8 p-6 bg-slate-900 rounded-3xl flex justify-between items-center text-white">
-                <div><p class="text-[9px] text-white/40 font-black uppercase">Net Payable Amount</p><h2 id="vTotal" class="text-5xl font-black">₹ 0</h2></div>
-                <div class="text-right"><p id="vPostDisplay" class="text-rose-400 font-black text-lg italic uppercase"></p></div>
-            </div>
-
-            <div id="paymentCard" class="qr-card" style="display:none;">
-                <img id="qrImg" src="" class="w-20 h-20 bg-white p-1 rounded-lg">
-                <div><p class="text-[10px] text-white/50 font-bold uppercase tracking-widest">Scan to Pay via UPI</p><p class="text-sm font-black text-white italic">Verified Paytm Account</p></div>
-            </div>
-
-            <div class="mt-12 pt-6 border-t border-dashed border-slate-300 text-center">
-                <h3 class="text-xs font-black text-slate-800 uppercase tracking-[5px] mb-2">Furniture Shop</h3>
-                <p class="warning-text">⚠️ RECEIPT WILL BE INVALID IF MODIFIED</p>
-                <p class="text-[8px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">Digitally Generated by Patel Traders</p>
-            </div>
-        </div>
-    </div>
-
     <div id="payModal" class="pay-modal" onclick="closePayModal()">
-        <div class="glass-card p-10 max-w-sm w-full text-center border-t-8 border-[#ff9933]" onclick="event.stopPropagation()">
-            <p class="text-white/40 text-[10px] uppercase font-black mb-1">Payable Due Amount</p>
-            <p id="pmAmt" class="text-5xl font-black text-[#ff9933] mb-8 tracking-tighter"></p>
-            <div class="bg-white p-4 rounded-[40px] inline-block mb-6 shadow-2xl"><img id="pmQR" src="" class="w-48 h-48 rounded-xl"></div>
-            <p class="text-white/60 text-[10px] uppercase font-bold tracking-widest mb-6 italic">Verified Paytm Merchant Account</p>
-            <button onclick="closePayModal()" class="w-full py-4 bg-white/10 rounded-2xl text-white font-black text-xs uppercase tracking-[3px] hover:bg-white/20 transition">Close Scanner</button>
+        <div class="glass-card p-8 max-w-sm w-full text-center border-t-4 border-[#ff9933] bg-[#0a0f18]" onclick="event.stopPropagation()">
+            <p class="text-white/40 text-[9px] uppercase font-black mb-1">Confirm Payment</p>
+            <p id="pmAmt" class="text-4xl font-black text-[#ff9933] mb-6 tracking-tighter"></p>
+            <button id="rzp-button" class="btn-bhagwa w-full mb-3 text-xs py-4 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H8l4-7v4h3l-4 7z"/></svg> Pay via Razorpay
+            </button>
+            <p class="text-white/30 text-[8px] uppercase font-bold tracking-widest mb-4">100% Secure & Encrypted</p>
+            <button onclick="closePayModal()" class="text-white/50 hover:text-white text-[9px] uppercase font-black">Cancel</button>
         </div>
     </div>
 
     <div id="legalModal" class="pay-modal" onclick="closeLegal()">
-        <div class="glass-card p-6 md:p-8 max-w-lg w-full mx-4 relative border-t-8 border-[#ff9933] bg-[#0a0f18]" onclick="event.stopPropagation()">
-            <button onclick="closeLegal()" class="absolute top-4 right-4 text-white/50 hover:text-rose-500 font-black text-xl">&times;</button>
-            <div class="text-center mb-6">
-                <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-12 h-12 mx-auto rounded-xl mb-3 border border-[#ff9933]/30">
-                <h2 id="legalTitle" class="text-xl font-black text-white uppercase tracking-widest text-[#ff9933]">Legal Document</h2>
-            </div>
-            <div id="legalBody" class="legal-content text-left text-[11px] text-white/70 leading-relaxed max-h-[50vh] overflow-y-auto pr-4 space-y-4">
-                </div>
-            <button onclick="closeLegal()" class="w-full mt-6 py-4 bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-[2px] hover:bg-white/20 transition">I Understand & Close</button>
+        <div class="glass-card p-6 max-w-lg w-full mx-4 bg-[#0a0f18] border-t-4 border-[#ff9933]" onclick="event.stopPropagation()">
+            <h2 id="legalTitle" class="text-lg font-black text-[#ff9933] uppercase mb-4 text-center">Legal Document</h2>
+            <div id="legalBody" class="text-[10px] text-white/60 leading-relaxed max-h-[50vh] overflow-y-auto pr-2 mb-4 space-y-3"></div>
+            <button onclick="closeLegal()" class="w-full py-3 bg-white/10 rounded-xl text-[9px] font-black uppercase">I Understand</button>
         </div>
     </div>
 
+    <div id="hidden-receipt-wrapper"><div id="receipt-render"><div id="stP" class="stamp" style="color:#10b981; border-color:#10b981;">PAID</div><div id="stU" class="stamp" style="color:#ef4444; border-color:#ef4444;">DUE</div><div class="flex justify-between border-b-4 pb-4 border-slate-900"><h1 class="text-2xl font-black text-slate-900 uppercase">Patel Traders</h1><div class="text-right"><p class="text-[8px] font-bold text-slate-700 uppercase">Talgram, Kannauj (U.P.)</p><p class="text-[8px] font-black text-slate-500">Mob: +91 9565697314</p></div></div><div class="flex justify-between my-6 font-bold uppercase text-slate-800"><div><p class="text-slate-400 text-[8px]">Billed To:</p><h3 id="vName" class="text-xl font-black">Client</h3><p id="vPhone" class="text-slate-500 text-[10px]">--</p></div><div class="text-right text-[9px]">INV: <span id="vInv" class="font-black">--</span><br>DATE: <span id="vDate">--</span></div></div><div class="min-h-[120px] border-y-2 py-4 text-lg font-black text-slate-900 uppercase"><table class="w-full"><tr><td><span id="vItem">ITEM</span><br><small id="vDetail" class="text-[9px] text-slate-400"></small></td><td id="vBase" class="text-right">₹ 0</td></tr></table></div><div class="mt-6 p-4 bg-slate-900 rounded-xl flex justify-between items-center text-white"><div><p class="text-[8px] text-white/50 font-black uppercase">Total Amount</p><h2 id="vTotal" class="text-3xl font-black">₹ 0</h2></div></div><div class="mt-8 pt-4 border-t border-dashed border-slate-300 text-center"><p class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Digitally Generated by Patel Traders</p></div></div></div>
+    
+    <div id="hidden-statement-wrapper"><div id="statement-render"><div class="flex justify-between border-b-4 pb-4 border-slate-900 mb-6"><h1 class="text-2xl font-black text-slate-900 uppercase">Account Statement</h1><div class="text-right"><p class="text-[8px] font-bold text-slate-700 uppercase">Patel Traders</p></div></div><div class="mb-6"><p class="text-[10px] text-slate-500 uppercase font-bold">Customer Name: <span id="sName" class="text-slate-900">--</span></p><p class="text-[10px] text-slate-500 uppercase font-bold">Total Spent: <span id="sTotal" class="text-[#ff9933] font-black">₹0</span></p></div><table class="w-full text-left text-[9px] text-slate-800 uppercase font-bold"><thead class="border-b-2 border-slate-300"><tr><th class="py-2">Date</th><th>Invoice</th><th>Item</th><th>Amount</th><th>Status</th></tr></thead><tbody id="sTableBody"></tbody></table><div class="mt-12 pt-4 border-t border-dashed border-slate-300 text-center"><p class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Digitally Generated Statement</p></div></div></div>
+
     <script>
-        const CONFIG = { URL: "https://script.google.com/macros/s/AKfycbyqGgozh6soglW6b_8s7LSr96_gIGNaweAnG1CQn-_F5HytVi9pYGi3GDX-lSz-mEyD/exec" };
+        const CONFIG = { 
+            URL: "https://script.google.com/macros/s/AKfycby2TFRp3qtRvLRPkwIpdCOfAyhpPuWk9idCLeoRAcybljR4477ksGIu5Zijx_OdaF_C/exec", 
+            TOKEN: "PT_ULTRA_7314_SANJAY_2026",
+            RZP_KEY: "rzp_live_SLzqkybUzYeMP8" 
+        };
+        
         let activeU = null, dbRecs = [];
 
-        // 🏆 NAVIGATION
-        function enterVault() { 
-            document.getElementById('view-welcome').style.display = 'none'; 
-            document.getElementById('view-auth').style.display = 'flex'; 
-        }
-        
-        function toggleAuth(t) { 
-            document.getElementById('boxL').style.display = t === 'login' ? 'block' : 'none'; 
-            document.getElementById('boxR').style.display = t === 'reg' ? 'block' : 'none'; 
+        // 🔥 UI Engine for Big Round Tick/Cross Status Popups
+        function showBigStatus(type, title, reason, txnid = "", date = "") {
+            const successSVG = `<div class="w-24 h-24 mx-auto bg-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.5)]"><svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg></div>`;
+            const failSVG = `<div class="w-24 h-24 mx-auto bg-rose-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(244,63,94,0.5)]"><svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18L18 6M6 6l12 12"></path></svg></div>`;
             
-            document.getElementById('tL').className = t === 'login' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; 
-            document.getElementById('tR').className = t === 'reg' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; 
+            document.getElementById('bs-icon').innerHTML = type === 'success' ? successSVG : failSVG;
+            document.getElementById('bs-title').innerText = title;
+            document.getElementById('bs-title').className = type === 'success' ? 'text-2xl font-black uppercase tracking-widest mt-4 mb-2 text-emerald-500' : 'text-2xl font-black uppercase tracking-widest mt-4 mb-2 text-rose-500';
+            document.getElementById('bs-reason').innerText = reason;
+            
+            if(type === 'success' && txnid) {
+                document.getElementById('bs-txn').innerText = txnid;
+                document.getElementById('bs-date').innerText = date || new Date().toLocaleString();
+                document.getElementById('bs-details').style.display = 'block';
+            } else {
+                document.getElementById('bs-details').style.display = 'none';
+            }
+            document.getElementById('big-status-overlay').style.display = 'flex';
         }
+        function closeBigStatus() { document.getElementById('big-status-overlay').style.display = 'none'; }
 
-        // 🔐 LOGIN LOGIC
+        function enterVault() { document.getElementById('view-welcome').style.display = 'none'; document.getElementById('view-auth').style.display = 'flex'; }
+        function toggleAuth(t) { document.getElementById('boxL').style.display = t === 'login' ? 'block' : 'none'; document.getElementById('boxR').style.display = t === 'reg' ? 'block' : 'none'; document.getElementById('tL').className = t === 'login' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; document.getElementById('tR').className = t === 'reg' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; }
+
         async function handleLogin() { 
-            if(!document.getElementById('checkL').checked) return alert("Please agree to the Digital Service Terms to log in."); 
-            
-            const u = document.getElementById('lU').value.trim(), 
-                  p = document.getElementById('lP').value.trim(); 
-                  
-            if(!u || !p) return alert("Please enter credentials."); 
+            if(!document.getElementById('checkL').checked) return showBigStatus('fail', 'Blocked', 'Please agree to Terms & Conditions.');
+            const u = document.getElementById('lU').value.trim(), p = document.getElementById('lP').value.trim(); 
+            if(!u || !p) return;
             
             document.getElementById('btnLogin').innerText = "Unlocking..."; 
-            
             try { 
-                const res = await fetch(`${CONFIG.URL}?action=getUsers`); 
+                const res = await fetch(`${CONFIG.URL}?action=getUsers&token=${CONFIG.TOKEN}&user=${u}`); 
                 const users = await res.json(); 
-                const found = users.find(x => x.user === u && x.pass === p); 
-                
-                if (found) { 
-                    activeU = found; 
-                    const savedPhoto = localStorage.getItem('photo_' + activeU.custid); 
-                    if(savedPhoto) activeU.photo = savedPhoto; 
-                    showDashboard(); 
-                } else { 
-                    alert("❌ Access Denied: Incorrect Username or Password."); 
-                } 
-            } catch(e) { 
-                alert("Server Error! Check connection."); 
-            } 
+                if (users.error) { showBigStatus('fail', 'System Error', users.error); } 
+                else {
+                    const found = users.find(x => x.username === u && String(x.password) === p); 
+                    if (found) { 
+                        activeU = found; 
+                        const savedPhoto = localStorage.getItem('photo_' + activeU.custid); 
+                        if(savedPhoto) activeU.photo = savedPhoto; 
+                        showDashboard(); 
+                    } else { showBigStatus('fail', 'Access Denied', 'Incorrect Username or Password.'); } 
+                }
+            } catch(e) { showBigStatus('fail', 'Offline', 'Check internet connection or Server settings.'); } 
             document.getElementById('btnLogin').innerText = "Unlock Account"; 
         }
 
-        // 🛡️ STRICT REGISTRATION & ANTI-DUPLICATE
+        // 🔥 MULTIPLE ACCOUNT DETECTION IN REGISTRATION
         async function handleReg() { 
-            if(!document.getElementById('checkR').checked) return alert("Please confirm the terms checkbox to register!"); 
+            if(!document.getElementById('checkR').checked) return showBigStatus('fail', 'Blocked', 'Confirm details checkbox required.');
+            const n = document.getElementById('rN').value.trim(), ph = document.getElementById('rPh').value.trim(), aadhar = document.getElementById('rAadhaar').value.trim(), u = document.getElementById('rU').value.trim(), p = document.getElementById('rP').value.trim(); 
             
-            const n = document.getElementById('rN').value.trim(), 
-                  ph = document.getElementById('rPh').value.trim(), 
-                  u = document.getElementById('rU').value.trim(), 
-                  p = document.getElementById('rP').value.trim(); 
-                  
-            if(!n || !ph || !u || !p) return alert("All fields are required!"); 
-            if(ph.length !== 10) return alert("Mobile number must be exactly 10 digits!"); 
+            if(!n || ph.length !== 10 || !u || !p) return showBigStatus('fail', 'Missing Info', 'All main fields are mandatory.');
             
-            document.getElementById('regBtn').innerText = "Verifying..."; 
-            document.getElementById('regBtn').disabled = true; 
-            
+            if(aadhar) {
+                if(aadhar.length !== 12) return showBigStatus('fail', 'Invalid Aadhaar', 'Aadhaar must be exactly 12 digits.');
+                if(/12345678|00000000|11111111/.test(aadhar)) return showBigStatus('fail', 'Invalid Aadhaar', 'Sequential/Fake Aadhaar numbers blocked by security.');
+            }
+
+            document.getElementById('regBtn').innerText = "Creating..."; document.getElementById('regBtn').disabled = true; 
             try { 
-                const res = await fetch(`${CONFIG.URL}?action=getUsers`); 
-                const users = await res.json(); 
-                
-                if(users.find(x => x.phone === ph || x.user === u)) { 
-                    document.getElementById('regBtn').innerText = "Create Vault"; 
-                    document.getElementById('regBtn').disabled = false; 
-                    return alert("⛔ DATABASE ALERT: Multiple accounts detected for this number/username. Account creation blocked."); 
-                } 
-                
+                // 🔥 Pre-check to prevent Multiple/Duplicate Accounts
+                const checkRes = await fetch(`${CONFIG.URL}?action=getUsers&token=${CONFIG.TOKEN}&user=sys_check`);
+                const existingUsers = await checkRes.json();
+                if(!existingUsers.error && existingUsers.length > 0) {
+                    const isDup = existingUsers.find(x => String(x.phone).slice(-10) === ph || x.username.toLowerCase() === u.toLowerCase() || (aadhar && x.aadhaar == aadhar));
+                    if(isDup) {
+                        document.getElementById('regBtn').innerText = "Create Vault"; document.getElementById('regBtn').disabled = false;
+                        return showBigStatus('fail', 'Duplicate Found', 'Phone, Username or Aadhaar is already registered in the system!');
+                    }
+                }
+
                 const cid = "PT-V-" + Math.floor(100000 + Math.random() * 900000); 
-                const data = { type: "USER", custid: cid, name: n, phone: ph, user: u, pass: p, photo: "", email: "", dob: "" }; 
-                
+                const data = { token: CONFIG.TOKEN, type: "USER", user: u, phone: ph, data: { custid: cid, name: n, phone: ph, username: u, password: p, aadhaar: aadhar, photo: "", email: "", dob: "" }}; 
                 await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }); 
                 
-                document.getElementById('view-auth').style.display = 'none'; 
-                document.getElementById('successID').innerText = cid; 
-                document.getElementById('view-success').style.display = 'flex'; 
-                document.getElementById('regBtn').innerText = "Create Vault"; 
-                document.getElementById('regBtn').disabled = false; 
-            } catch(e) { 
-                alert("Registration failed, check connection."); 
-                document.getElementById('regBtn').innerText = "Create Vault"; 
-                document.getElementById('regBtn').disabled = false; 
-            } 
+                showBigStatus('success', 'Vault Created', 'Your secure ID is ' + cid + '. Please login now.');
+                toggleAuth('login');
+            } catch(e) { showBigStatus('fail', 'Network Error', 'Could not reach servers.'); }
+            document.getElementById('regBtn').innerText = "Create Vault"; document.getElementById('regBtn').disabled = false; 
         }
 
-        function goToLogin() { 
-            document.getElementById('view-success').style.display = 'none'; 
-            document.getElementById('view-auth').style.display = 'flex'; 
-            toggleAuth('login'); 
+        async function handleForgetPass() {
+            const u = prompt("Enter your Username:"); if(!u) return;
+            const ph = prompt("Enter your registered 10-digit Mobile Number:"); if(!ph) return;
+            const np = prompt("Enter your NEW Password:"); if(!np) return;
+            try {
+                await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "FORGET_PASS", user: u, phone: ph, newPass: np }) });
+                showBigStatus('success', 'Reset Request', 'If details match, password will be updated.');
+            } catch(e) { showBigStatus('fail', 'Error', 'Server unreachable.'); }
         }
 
         function showDashboard() { 
-            document.getElementById('view-auth').style.display = 'none'; 
-            document.getElementById('view-dashboard').style.display = 'block'; 
-            updateUI(); 
-            loadVault(); 
+            document.getElementById('view-auth').style.display = 'none'; document.getElementById('view-dashboard').style.display = 'block'; 
+            updateUI(); loadVault(); 
         }
 
-        // 🎨 UPDATE PROFILE UI
         function updateUI() { 
             const ava = activeU.photo || "https://cdn-icons-png.flaticon.com/512/149/149071.png"; 
-            document.getElementById('dashWelcome').innerText = activeU.name; 
-            document.getElementById('dashID').innerText = activeU.custid; 
+            document.getElementById('dashWelcome').innerText = activeU.name; document.getElementById('dashID').innerText = activeU.custid; 
             document.getElementById('navAvatar').src = document.getElementById('modalAvatar').src = ava; 
             document.getElementById('modalName').innerText = activeU.name; 
             document.getElementById('valEmail').innerText = activeU.email || "Not Set"; 
             document.getElementById('valDOB').innerText = activeU.dob || "DD/MM/YYYY"; 
-            document.getElementById('valPhone').innerText = activeU.phone; 
-            document.getElementById('modalID').innerText = activeU.custid; 
+            document.getElementById('valPhone').innerText = "+91 " + String(activeU.phone).slice(-10); 
+            
+            const aadh = activeU.aadhaar || "";
+            if(aadh.length === 12) {
+                document.getElementById('valAadhaar').innerText = "XXXX-XXXX-" + aadh.slice(-4);
+                document.getElementById('rowAadhaar').style.display = 'flex';
+            } else {
+                document.getElementById('rowAadhaar').style.display = 'none';
+            }
         }
 
-        // ✏️ EDIT FIELDS AND SAVE TO DATABASE
         function editField(f) { 
             let pMsg = f === 'email' ? "Enter your Email ID:" : "Enter your Date of Birth (DD/MM/YYYY):"; 
             let val = prompt(pMsg, activeU[f] || ""); 
             if(val !== null && val.trim() !== "") { 
-                activeU[f] = val.trim(); 
-                updateUI(); 
-                fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "UPDATE_USER", user: activeU.user, field: f, newVal: val.trim() }) }); 
+                activeU[f] = val.trim(); updateUI(); 
+                fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "UPDATE_USER", user: activeU.username, field: f, newVal: val.trim() }) }); 
             } 
         }
-
-        // 📸 UPLOAD PHOTO AND SAVE TO DATABASE
-        function handlePhotoUpload(e) { 
-            const file = e.target.files[0]; 
-            if(!file) return; 
-            
-            const reader = new FileReader(); 
-            reader.onload = (re) => { 
-                const img = new Image(); 
-                img.onload = () => { 
-                    const canvas = document.createElement('canvas'); 
-                    canvas.width = canvas.height = 150; 
-                    canvas.getContext('2d').drawImage(img, 0,0,150,150); 
-                    const b64 = canvas.toDataURL('image/jpeg', 0.8); 
-                    activeU.photo = b64; 
-                    localStorage.setItem('photo_' + activeU.custid, b64); 
-                    updateUI(); 
-                    fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "UPDATE_USER", user: activeU.user, field: 'photo', newVal: b64 }) }); 
-                }; 
-                img.src = re.target.result; 
-            }; 
-            reader.readAsDataURL(file); 
+        function deleteAadhaar() {
+            if(!confirm("Remove Aadhaar record from your profile?")) return;
+            activeU.aadhaar = ""; updateUI();
+            fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "UPDATE_USER", user: activeU.username, field: 'aadhaar', newVal: "" }) });
         }
-
+        function handlePhotoUpload(e) { 
+            const file = e.target.files[0]; if(!file) return; 
+            const reader = new FileReader(); reader.onload = (re) => { 
+                const img = new Image(); img.onload = () => { 
+                    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 150; canvas.getContext('2d').drawImage(img, 0,0,150,150); 
+                    const b64 = canvas.toDataURL('image/jpeg', 0.8); 
+                    activeU.photo = b64; localStorage.setItem('photo_' + activeU.custid, b64); updateUI(); 
+                    fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "UPDATE_USER", user: activeU.username, field: 'photo', newVal: b64 }) }); 
+                }; img.src = re.target.result; 
+            }; reader.readAsDataURL(file); 
+        }
         function openProfile() { document.getElementById('profile-modal').style.display = 'flex'; }
         function closeProfile() { document.getElementById('profile-modal').style.display = 'none'; }
 
-        // 🔄 LOAD BILLS WITH DUAL MATCH (NAME + PHONE)
         async function loadVault() { 
             const gP = document.getElementById('pGrid'), gU = document.getElementById('uGrid'); 
-            gP.innerHTML = gU.innerHTML = `<p class='animate-pulse text-[10px] opacity-40 uppercase'>Syncing Data...</p>`; 
+            gP.innerHTML = gU.innerHTML = `<p class='animate-pulse text-[9px] opacity-40 uppercase'>Syncing Data from Cloud...</p>`; 
             
             try { 
-                const res = await fetch(`${CONFIG.URL}?action=getBills`); 
+                const res = await fetch(`${CONFIG.URL}?action=getBills&token=${CONFIG.TOKEN}&user=${activeU.username}`); 
                 dbRecs = await res.json(); 
-                
+                if (dbRecs.error) { gP.innerHTML = gU.innerHTML = "Error: " + dbRecs.error; return; }
+
                 const myPh = String(activeU.phone).replace(/\D/g, '').slice(-10); 
-                const myNm = String(activeU.name).trim().toLowerCase(); 
+                const mine = dbRecs.filter(r => String(r.phone || "").replace(/\D/g, '').slice(-10) === myPh).reverse(); 
                 
-                const mine = dbRecs.filter(r => { 
-                    const bPh = String(r.phone || "").replace(/\D/g, '').slice(-10); 
-                    const bNm = String(r.name || "").trim().toLowerCase(); 
-                    return (bPh === myPh) && (bNm === myNm); 
-                }).reverse(); 
-                
-                gU.innerHTML = mine.filter(x => x.mode !== 'PAID').map(r => ` 
-                    <div class="glass-card p-6 border-b-4 border-rose-500 hover:bg-white/5 transition"> 
-                        <p class="text-[9px] font-bold opacity-40 uppercase tracking-widest mb-1">${formatDate(r.date)}</p> 
-                        <h4 class="font-black text-white uppercase text-lg truncate">${r.item}</h4> 
-                        <h2 class="text-4xl font-black text-rose-500 mt-2">${r.total}</h2> 
-                        <div class="flex gap-2 mt-6"> 
-                            <button onclick="openPayModal('${r.total}')" class="flex-1 py-3 bg-rose-600 hover:bg-rose-500 rounded-xl text-[9px] font-black uppercase shadow-lg shadow-rose-600/30 transition">Pay QR</button> 
-                            <button onclick="generatePDF(${dbRecs.indexOf(r)})" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-[9px] font-black uppercase transition">Receipt</button> 
-                        </div> 
-                    </div>`).join('') || "<p class='text-white/30 text-xs italic p-4'>No pending dues.</p>"; 
+                const totalSp = mine.filter(x => x.status === 'PAID').reduce((sum, r) => {
+                    const clean = parseFloat(String(r.amount).replace(/[^0-9.-]+/g,""));
+                    return sum + (isNaN(clean) ? 0 : clean);
+                }, 0);
+                document.getElementById('totalSpend').innerText = "₹ " + totalSp.toLocaleString('en-IN');
+
+                gU.innerHTML = mine.filter(x => x.status !== 'PAID').map(r => ` 
+                    <div class="pro-card"> 
+                        <span class="badge-due">DUE</span>
+                        <p class="text-[8px] font-bold opacity-40 uppercase tracking-widest mb-1">${formatDate(r.date)} | ${r.invoiceno}</p> 
+                        <h4 class="font-black text-white uppercase text-md mb-3">${r.item}</h4> 
+                        <div class="flex justify-between items-end">
+                            <h2 class="text-2xl font-black text-white">${r.amount}</h2>
+                            <div class="flex gap-2">
+                                <button onclick="generatePDF(${dbRecs.indexOf(r)})" class="px-3 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-[8px] font-black uppercase transition">Get PDF</button> 
+                                <button onclick="openPayModal('${r.invoiceno}', '${r.amount}')" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 rounded-lg text-[9px] font-black uppercase shadow-lg shadow-rose-600/30 transition">Pay</button> 
+                            </div>
+                        </div>
+                    </div>`).join('') || "<p class='text-white/30 text-xs italic'>No pending dues.</p>"; 
                     
-                gP.innerHTML = mine.filter(x => x.mode === 'PAID').map(r => ` 
-                    <div class="glass-card p-6 border-b-4 border-emerald-500 hover:bg-white/5 transition"> 
-                        <p class="text-[9px] font-bold opacity-40 uppercase tracking-widest mb-1">${formatDate(r.date)}</p> 
-                        <h4 class="font-black text-white uppercase text-lg truncate">${r.item}</h4> 
-                        <h2 class="text-3xl font-black text-emerald-500 mt-2">${r.total}</h2> 
-                        <button onclick="generatePDF(${dbRecs.indexOf(r)})" class="w-full mt-6 py-3 bg-white/5 border border-white/10 hover:bg-[#ff9933] hover:border-[#ff9933] rounded-xl text-[10px] font-black uppercase transition-all">Download PDF</button> 
-                    </div>`).join('') || "<p class='text-white/30 text-xs italic p-4'>No history found.</p>"; 
-            } catch(e) { 
-                gP.innerHTML = gU.innerHTML = "Error loading data."; 
-            } 
+                gP.innerHTML = mine.filter(x => x.status === 'PAID').map(r => ` 
+                    <div class="pro-card"> 
+                        <span class="badge-paid">PAID</span>
+                        <p class="text-[8px] font-bold opacity-40 uppercase tracking-widest mb-1">${formatDate(r.date)} | ${r.invoiceno}</p> 
+                        <h4 class="font-black text-white uppercase text-md mb-3">${r.item}</h4> 
+                        <div class="flex justify-between items-end">
+                            <h2 class="text-2xl font-black text-white/70">${r.amount}</h2>
+                            <button onclick="generatePDF(${dbRecs.indexOf(r)})" class="px-4 py-2 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-lg text-[9px] font-black uppercase transition-all">Download PDF</button> 
+                        </div>
+                    </div>`).join('') || "<p class='text-white/30 text-xs italic'>No payment history found.</p>"; 
+            } catch(e) { gP.innerHTML = gU.innerHTML = "Error loading data."; } 
         }
 
-        function openPayModal(amt) { 
-            const cleanAmt = String(amt).replace(/[₹\s,]/g, ''); 
-            document.getElementById('pmAmt').innerText = "₹" + Number(cleanAmt).toLocaleString(); 
-            document.getElementById('pmQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=paytmqr5feodq@ptys&pn=Paytm&tn=Verified%20Paytm%20Account&am=${cleanAmt}`; 
+        function startPayment(inv, amt) {
+            const cleanAmt = parseFloat(String(amt).replace(/[₹\s,]/g, ''));
+            if(isNaN(cleanAmt) || cleanAmt <= 0) return showBigStatus('fail', 'Payment Error', 'Invalid invoice amount.');
+
+            const options = {
+                key: CONFIG.RZP_KEY,
+                amount: cleanAmt * 100, 
+                currency: "INR",
+                name: "Patel Traders",
+                description: "Payment for Invoice " + inv,
+                image: "https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png",
+                handler: async function (response) {
+                    closePayModal();
+                    try {
+                        await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "MARK_PAID", inv: inv, txn: response.razorpay_payment_id }) });
+                        loadVault(); 
+                        showBigStatus('success', 'Payment Successful', 'Invoice shifted to Paid History.', response.razorpay_payment_id, new Date().toLocaleString());
+                    } catch(e) { showBigStatus('fail', 'Sync Error', 'Payment done but sync failed. Contact Admin.'); }
+                },
+                prefill: { name: activeU.name, contact: activeU.phone, email: activeU.email || "" },
+                theme: { color: "#ff9933" },
+                modal: { ondismiss: function() { showBigStatus('fail', 'Cancelled', 'Payment was cancelled by user.'); } }
+            };
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function (res) { 
+                closePayModal(); 
+                showBigStatus('fail', 'Payment Failed', res.error.description); 
+            });
+            rzp.open();
+        }
+
+        function openPayModal(inv, amt) { 
+            document.getElementById('pmAmt').innerText = "₹" + amt;
+            document.getElementById('rzp-button').onclick = () => startPayment(inv, amt);
             document.getElementById('payModal').style.display = 'flex'; 
         }
-
         function closePayModal() { document.getElementById('payModal').style.display = 'none'; }
 
-        function formatDate(dStr) { 
-            if(!dStr) return "--"; 
-            if(dStr.includes('T')) return dStr.split('T')[0].split('-').reverse().join('/'); 
-            return dStr; 
-        }
+        function formatDate(dStr) { if(!dStr) return "--"; if(dStr.includes('T')) return dStr.split('T')[0].split('-').reverse().join('/'); return dStr; }
 
-        // 🖨️ PDF GENERATOR ENGINE
         function generatePDF(idx) { 
             const r = dbRecs[idx]; 
-            const wrap = document.getElementById('hidden-receipt-wrapper'); 
-            wrap.style.display = 'flex'; 
-            
-            document.getElementById('vName').innerText = r.name || "Customer"; 
-            document.getElementById('vPhone').innerText = r.phone || "--"; 
-            document.getElementById('vInv').innerText = r.inv || "#--"; 
-            document.getElementById('vTotal').innerText = r.total || "₹ 0"; 
-            document.getElementById('vBase').innerText = r.total || "₹ 0"; 
-            document.getElementById('vItem').innerText = r.item || "ITEM"; 
+            const wrap = document.getElementById('hidden-receipt-wrapper'); wrap.style.display = 'flex'; 
+            document.getElementById('vName').innerText = r.name || "Customer"; document.getElementById('vPhone').innerText = r.phone || "--"; 
+            document.getElementById('vInv').innerText = r.invoiceno || "#--"; document.getElementById('vTotal').innerText = r.amount || "₹ 0"; 
+            document.getElementById('vBase').innerText = r.amount || "₹ 0"; document.getElementById('vItem').innerText = r.item || "ITEM"; 
             document.getElementById('vDetail').innerText = r.detail || ""; 
-            document.getElementById('vWar').innerText = "Warranty: " + (r.warranty || "None"); 
             document.getElementById('vDate').innerText = formatDate(r.date); 
             
-            const isPaid = (r.mode === 'PAID'); 
-            document.getElementById('stP').style.display = isPaid ? 'flex' : 'none'; 
-            document.getElementById('stU').style.display = !isPaid ? 'flex' : 'none'; 
-            document.getElementById('vPostDisplay').innerText = !isPaid && r.postdate ? "DUE: " + r.postdate : ""; 
-            document.getElementById('paymentCard').style.display = !isPaid ? 'flex' : 'none'; 
-            
-            if(!isPaid) { 
-                const clean = String(r.total).replace(/[₹\s,]/g, ''); 
-                document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=upi://pay?pa=paytmqr5feodq@ptys&pn=Paytm&am=${clean}`; 
-            } 
+            const isPaid = (r.status === 'PAID'); 
+            document.getElementById('stP').style.display = isPaid ? 'flex' : 'none'; document.getElementById('stU').style.display = !isPaid ? 'flex' : 'none'; 
             
             setTimeout(async () => { 
                 try { 
                     const canvas = await html2canvas(document.getElementById('receipt-render'), { scale: 2, useCORS: true }); 
-                    const pdf = new jspdf.jsPDF('p', 'mm', 'a4'); 
-                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297); 
-                    pdf.save(`PT_Receipt_${r.inv}.pdf`); 
-                } catch(e) { 
-                    alert("PDF Engine Error"); 
-                } 
+                    const pdf = new jspdf.jsPDF('p', 'mm', 'a4'); pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297); 
+                    pdf.save(`PT_Receipt_${r.invoiceno}.pdf`); 
+                } catch(e) { showBigStatus('fail', 'PDF Error', 'Engine failed to render PDF.'); } 
                 wrap.style.display = 'none'; 
-            }, 1000); 
+            }, 800); 
         }
 
-        async function linkAndOpenReceipt() { 
-            const inv = document.getElementById('linkInvInput').value.trim().toUpperCase(); 
-            if(!inv) return alert("Enter Invoice Number!"); 
+        async function downloadStatement() {
+            const m = document.getElementById('stmtMonth').value;
+            const y = document.getElementById('stmtYear').value;
             
-            const found = dbRecs.find(r => r.inv === inv); 
-            if(found) generatePDF(dbRecs.indexOf(found)); 
-            else alert("Not Found!"); 
+            const myPh = String(activeU.phone).replace(/\D/g, '').slice(-10); 
+            let filtered = dbRecs.filter(r => String(r.phone || "").replace(/\D/g, '').slice(-10) === myPh);
+            
+            if(y !== 'ALL') filtered = filtered.filter(r => r.date && r.date.includes(y));
+            if(m !== 'ALL') filtered = filtered.filter(r => r.date && r.date.split('-')[1] === m);
+            
+            if(filtered.length === 0) return showBigStatus('fail', 'No Data', 'No transactions found for this period.');
+
+            document.getElementById('sName').innerText = activeU.name;
+            const total = filtered.reduce((sum, r) => sum + (r.status==='PAID'?parseFloat(String(r.amount).replace(/[^0-9.-]+/g,""))||0:0), 0);
+            document.getElementById('sTotal').innerText = "₹" + total.toLocaleString();
+
+            const tbody = document.getElementById('sTableBody');
+            tbody.innerHTML = filtered.map(r => `<tr class="border-b border-slate-100"><td class="py-2">${formatDate(r.date)}</td><td>${r.invoiceno}</td><td>${r.item}</td><td class="font-black">₹${parseFloat(String(r.amount).replace(/[^0-9.-]+/g,"")).toLocaleString()}</td><td class="${r.status==='PAID'?'text-emerald-500':'text-rose-500'}">${r.status}</td></tr>`).join('');
+
+            const wrap = document.getElementById('hidden-statement-wrapper'); wrap.style.display = 'flex';
+            setTimeout(async () => { 
+                try { 
+                    const canvas = await html2canvas(document.getElementById('statement-render'), { scale: 2, useCORS: true }); 
+                    const pdf = new jspdf.jsPDF('p', 'mm', 'a4'); pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297); 
+                    pdf.save(`PT_Statement_${m}_${y}.pdf`); 
+                } catch(e) { showBigStatus('fail', 'PDF Error', 'Failed to generate statement.'); } 
+                wrap.style.display = 'none'; 
+            }, 800);
         }
 
-        // 🔥 DEMO QR PAYMENT MODAL LOGIC (For KYC Only)
-        function openDemoPayModal() {
-            document.getElementById('pmAmt').innerText = "₹10.00";
-            let demoUPI = `upi://pay?pa=pateltraders@paytm&pn=Patel%20Traders&am=10.00&cu=INR`;
-            document.getElementById('pmQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(demoUPI)}`;
-            document.getElementById('payModal').style.display = 'flex';
-        }
-
-        // 🔥 LEGAL PAGES SCRIPT FOR RAZORPAY KYC
-        const legalContent = {
-            'privacy': {
-                title: "PRIVACY POLICY",
-                body: "<p><strong>1. Information Collection:</strong> We at Patel Traders collect basic personal details (Name, Phone Number, Email, and billing details) solely for the purpose of creating invoices, maintaining labor records, and managing payments.</p><p><strong>2. Data Security:</strong> Your data is stored securely. We do not sell, rent, or trade your personal information to any third parties.</p><p><strong>3. Payment Security:</strong> All online payments are processed through secure, RBI-compliant payment gateways. We do not store your UPI PIN, credit card numbers, or bank passwords on our servers.</p>"
-            },
-            'terms': {
-                title: "TERMS & CONDITIONS",
-                body: "<p>Welcome to Patel Traders. By accessing this Customer Vault, you agree to the following terms:</p><p><strong>1. Services:</strong> Patel Traders provides labor management, trading, and billing services. This portal is used for tracking and paying for these services.</p><p><strong>2. User Responsibility:</strong> You must provide accurate information while registering. Invoices generated reflect the services agreed upon.</p><p><strong>3. Dispute:</strong> Any discrepancies in the invoice must be reported to Patel Traders management within 3 working days.</p>"
-            },
-            'refund': {
-                title: "CANCELLATION & REFUND POLICY",
-                body: "<p><strong>1. Service Nature:</strong> Payments made on this portal are for labor services or goods already delivered/rendered by Patel Traders.</p><p><strong>2. Non-Refundable:</strong> Due to the nature of our business, successful payments are generally non-refundable.</p><p><strong>3. Exceptions (Double Payment):</strong> If a technical error causes your account to be debited twice for the same invoice, please contact us. Upon verification, the duplicate amount will be refunded to the original payment source within 5-7 working days.</p>"
-            },
-            'contact': {
-                title: "CONTACT US",
-                body: "<p>If you have any queries regarding your billing, payments, or services, please reach out to us:</p><p><strong>Business Name:</strong> Patel Traders</p><p><strong>Address:</strong> 401, Gandhinagar, Talgram, PO-Talgram, Dist-Kannauj (U.P.) - 209731</p><p><strong>Phone:</strong> +91 9565697314</p><p><strong>Operating Hours:</strong> 09:00 AM to 06:00 PM (Mon-Sat)</p>"
-            }
+        const legalData = {
+            'privacy': { title: "PRIVACY POLICY", body: "1. Information Collection: We collect basic personal details for invoicing.<br>2. Data Security: Data is securely stored via encryption." },
+            'terms': { title: "TERMS & CONDITIONS", body: "1. Services: Patel Traders provides trading and billing services.<br>2. By using this Vault, you agree to accurate billing terms." },
+            'refund': { title: "CANCELLATION & REFUND", body: "Payments are for services/goods delivered. Successful payments are generally non-refundable unless double payment occurred." }
         };
-
-        function openLegal(type) {
-            document.getElementById('legalTitle').innerText = legalContent[type].title;
-            document.getElementById('legalBody').innerHTML = legalContent[type].body;
-            document.getElementById('legalModal').style.display = 'flex';
-        }
-
-        function closeLegal() {
-            document.getElementById('legalModal').style.display = 'none';
-        }
+        function openLegal(t) { document.getElementById('legalTitle').innerText=legalData[t].title; document.getElementById('legalBody').innerHTML=legalData[t].body; document.getElementById('legalModal').style.display='flex'; }
+        function closeLegal() { document.getElementById('legalModal').style.display='none'; }
     </script>
 </body>
 </html>
