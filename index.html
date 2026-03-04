@@ -36,12 +36,12 @@
         .m-input { background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 14px; width: 100%; color: #0f172a; outline: none; transition: 0.3s; font-size: 13px; font-weight: 600; }
         .m-input:focus { border-color: var(--bhagwa); background: #ffffff; box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1); }
         
-        /* 🔥 GLOW RESTORED: Specific override to protect button styling and text color */
+        /* 🔥 GLOW RESTORED */
         .btn-bhagwa { 
             background: linear-gradient(135deg, #ff9933, #e65c00); 
-            color: #ffffff !important; /* Button text stays purely white */
+            color: #ffffff !important; 
             font-weight: 800; text-transform: uppercase; border-radius: 12px; padding: 16px; width: 100%; cursor: pointer; border: none; 
-            box-shadow: 0 8px 25px rgba(255, 153, 51, 0.4) !important; /* Bright Bhagwa Glow */
+            box-shadow: 0 8px 25px rgba(255, 153, 51, 0.4) !important; 
             transition: 0.2s; letter-spacing: 1px; 
         }
         .btn-bhagwa:active { transform: scale(0.96); box-shadow: 0 4px 15px rgba(255, 153, 51, 0.3) !important; }
@@ -58,7 +58,7 @@
 
         .big-status-box { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; text-align: center; }
 
-        /* 💡 MAGIC CSS OVERRIDES (To make old code look good on White Theme without changing HTML) */
+        /* 💡 MAGIC CSS OVERRIDES */
         h1, h2, h3, h4, p:not(.btn-bhagwa) { color: #0f172a; }
         #view-welcome h1 { color: #0f172a !important; }
         .text-white { color: #0f172a !important; }
@@ -70,6 +70,10 @@
         .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
         .bg-black\/40 { background-color: rgba(0,0,0,0.05) !important; }
         .border-white\/5 { border-color: rgba(0,0,0,0.06) !important; }
+
+        /* 🛠️ PDF BUG FIX: Protecting the Receipt Total Box from turning black */
+        #receipt-render .bg-slate-900 h2 { color: #ffffff !important; }
+        #receipt-render .bg-slate-900 p { color: rgba(255, 255, 255, 0.7) !important; }
 
         #hidden-receipt-wrapper, #hidden-statement-wrapper { position: fixed; top: 0; left: 0; opacity: 0.01; z-index: -100; pointer-events: none; display: none; justify-content: center; width: 100%; }
         #receipt-render, #statement-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 15mm; border: 10px solid var(--bhagwa); position: relative; }
@@ -89,7 +93,7 @@
                 <p class="text-[9px] text-white/40 uppercase font-bold">Date & Time</p>
                 <p id="bs-date" class="text-xs font-mono text-white">---</p>
             </div>
-            <button onclick="closeBigStatus()" class="btn-bhagwa text-xs py-3 shadow-none">Acknowledge</button>
+            <button onclick="closeBigStatus()" class="btn-bhagwa text-xs py-3 shadow-none bg-white/10 hover:bg-white/20">Acknowledge</button>
         </div>
     </div>
 
@@ -170,8 +174,8 @@
                 <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>
             </div>
             <h2 class="text-2xl font-black uppercase tracking-widest mb-2 text-emerald-500">Success</h2>
-            <p class="text-xs text-white/60 font-medium mb-6 leading-relaxed">Your password reset request has been processed securely.</p>
-            <button onclick="showLoginFromForget()" class="btn-bhagwa w-full py-3 text-xs">Go to Login</button>
+            <p class="text-xs text-white/60 font-medium mb-6 leading-relaxed">Your password reset request has been processed securely. If details matched, your new password is active.</p>
+            <button onclick="showLoginFromForget()" class="btn-bhagwa w-full py-3 text-xs bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-emerald-500/30">Go to Login</button>
         </div>
     </div>
 
@@ -274,10 +278,38 @@
         </div>
     </div>
 
-    <div id="hidden-receipt-wrapper"><div id="receipt-render"><div id="stP" class="stamp" style="color:#10b981; border-color:#10b981;">PAID</div><div id="stU" class="stamp" style="color:#ef4444; border-color:#ef4444;">DUE</div><div class="flex justify-between border-b-4 pb-4 border-slate-900"><h1 class="text-2xl font-black text-slate-900 uppercase">Patel Traders</h1><div class="text-right"><p class="text-[8px] font-bold text-slate-700 uppercase">Talgram, Kannauj (U.P.)</p><p class="text-[8px] font-black text-slate-500">Mob: +91 9565697314</p></div></div><div class="flex justify-between my-6 font-bold uppercase text-slate-800"><div><p class="text-slate-400 text-[8px]">Billed To:</p><h3 id="vName" class="text-xl font-black">Client</h3><p id="vPhone" class="text-slate-500 text-[10px]">--</p></div><div class="text-right text-[9px]">INV: <span id="vInv" class="font-black">--</span><br>DATE: <span id="vDate">--</span></div></div><div class="min-h-[120px] border-y-2 py-4 text-lg font-black text-slate-900 uppercase"><table class="w-full"><tr><td><span id="vItem">ITEM</span><br><small id="vDetail" class="text-[9px] text-slate-400"></small></td><td id="vBase" class="text-right">₹ 0</td></tr></table></div><div class="mt-6 p-4 bg-slate-900 rounded-xl flex justify-between items-center text-white"><div><p class="text-[8px] text-white/50 font-black uppercase">Total Amount</p><h2 id="vTotal" class="text-3xl font-black">₹ 0</h2></div></div><div class="mt-8 pt-4 border-t border-dashed border-slate-300 text-center"><p class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Digitally Generated by Patel Traders</p></div></div></div>
-    <div id="hidden-statement-wrapper"><div id="statement-render"><div class="flex justify-between border-b-4 pb-4 border-slate-900 mb-6"><h1 class="text-2xl font-black text-slate-900 uppercase">Account Statement</h1><div class="text-right"><p class="text-[8px] font-bold text-slate-700 uppercase">Patel Traders</p></div></div><div class="mb-6"><p class="text-[10px] text-slate-500 uppercase font-bold">Customer Name: <span id="sName" class="text-slate-900">--</span></p><p class="text-[10px] text-slate-500 uppercase font-bold">Total Spent: <span id="sTotal" class="text-[#ff9933] font-black">₹0</span></p></div><table class="w-full text-left text-[9px] text-slate-800 uppercase font-bold"><thead class="border-b-2 border-slate-300"><tr><th class="py-2">Date</th><th>Invoice</th><th>Item</th><th>Amount</th><th>Status</th></tr></thead><tbody id="sTableBody"></tbody></table><div class="mt-12 pt-4 border-t border-dashed border-slate-300 text-center"><p class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Digitally Generated Statement</p></div></div></div>
+    <div id="hidden-receipt-wrapper"><div id="receipt-render"><div id="stP" class="stamp" style="color:#10b981; border-color:#10b981;">PAID</div><div id="stU" class="stamp" style="color:#ef4444; border-color:#ef4444;">DUE</div><div class="flex justify-between border-b-4 pb-4 border-slate-900 items-center"><div class="flex items-center gap-3"><img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-12 h-12 rounded-lg" crossorigin="anonymous"><div><h1 class="text-2xl font-black text-slate-900 uppercase leading-none">Patel Traders</h1><p class="text-[9px] font-black text-[#ff9933] tracking-[2px] uppercase mt-1">Furniture Shop</p></div></div><div class="text-right"><p class="text-[8px] font-bold text-slate-700 uppercase">Talgram, Kannauj (U.P.)</p><p class="text-[8px] font-black text-slate-500">Mob: +91 9565697314</p></div></div><div class="flex justify-between my-6 font-bold uppercase text-slate-800"><div><p class="text-slate-400 text-[8px]">Billed To:</p><h3 id="vName" class="text-xl font-black">Client</h3><p id="vPhone" class="text-slate-500 text-[10px]">--</p></div><div class="text-right text-[9px]">INV: <span id="vInv" class="font-black">--</span><br>DATE: <span id="vDate">--</span></div></div><div class="min-h-[120px] border-y-2 py-4 text-lg font-black text-slate-900 uppercase"><table class="w-full"><tr><td><span id="vItem">ITEM</span><br><small id="vDetail" class="text-[9px] text-slate-400"></small></td><td id="vBase" class="text-right">₹ 0</td></tr></table></div><div class="mt-6 p-4 bg-slate-900 rounded-xl flex justify-between items-center text-white"><div><p class="text-[8px] text-white/50 font-black uppercase">Total Amount</p><h2 id="vTotal" class="text-3xl font-black">₹ 0</h2></div></div><div class="mt-8 pt-4 border-t border-dashed border-slate-300 text-center"><p class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Digitally Generated by Patel Traders</p><p class="text-[6px] font-bold text-rose-500 uppercase tracking-widest mt-1">This document will be invalid if modified digitally or physically.</p></div></div></div>
+    
+    <div id="hidden-statement-wrapper"><div id="statement-render"><div class="flex justify-between border-b-4 pb-4 border-slate-900 mb-6 items-center"><div><h1 class="text-2xl font-black text-slate-900 uppercase leading-none">Account Statement</h1></div><div class="text-right flex items-center justify-end gap-2"><div class="text-right"><p class="text-[9px] font-black text-slate-900 uppercase">Patel Traders</p><p class="text-[7px] font-bold text-[#ff9933] uppercase tracking-widest">Furniture Shop</p></div><img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-8 h-8 rounded-md" crossorigin="anonymous"></div></div><div class="mb-6"><p class="text-[10px] text-slate-500 uppercase font-bold">Customer Name: <span id="sName" class="text-slate-900">--</span></p><p class="text-[10px] text-slate-500 uppercase font-bold">Total Spent: <span id="sTotal" class="text-[#ff9933] font-black">₹0</span></p></div><table class="w-full text-left text-[9px] text-slate-800 uppercase font-bold"><thead class="border-b-2 border-slate-300"><tr><th class="py-2">Date</th><th>Invoice</th><th>Item</th><th>Amount</th><th>Status</th></tr></thead><tbody id="sTableBody"></tbody></table><div class="mt-12 pt-4 border-t border-dashed border-slate-300 text-center"><p class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Digitally Generated Statement</p><p class="text-[6px] font-bold text-rose-500 uppercase tracking-widest mt-1">This document will be invalid if modified digitally or physically.</p></div></div></div>
 
     <script>
+        // 🚀 SMART CACHE MEMORY
+        window.addEventListener('DOMContentLoaded', () => {
+            const hasSeenWelcome = localStorage.getItem('pt_vault_welcome_seen');
+            const savedSession = localStorage.getItem('pt_vault_active_session');
+
+            if (savedSession) {
+                activeU = JSON.parse(savedSession);
+                document.getElementById('view-welcome').style.display = 'none';
+                document.getElementById('view-auth').style.display = 'none';
+                
+                // 📡 BACKGROUND SECURITY LOG
+                try {
+                    let loginCount = parseInt(localStorage.getItem('pt_sec_login_count') || '0') + 1;
+                    localStorage.setItem('pt_sec_login_count', loginCount);
+                    let deviceFP = navigator.userAgent.replace(/;/g, '').substring(0, 30);
+                    let currentTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+                    let loginUrl = `${CONFIG.URL}?token=${CONFIG.TOKEN}&action=login&name=${encodeURIComponent(activeU.name)}&phone=${encodeURIComponent(activeU.phone)}&time=${encodeURIComponent(currentTime)}&loginCount=${loginCount}&device=${encodeURIComponent(deviceFP)}`;
+                    fetch(loginUrl, {mode: 'no-cors'});
+                } catch(e) {}
+
+                showDashboard();
+            } else if (hasSeenWelcome === 'true') {
+                document.getElementById('view-welcome').style.display = 'none';
+                document.getElementById('view-auth').style.display = 'flex';
+            }
+        });
+
         const CONFIG = { 
             URL: "https://script.google.com/macros/s/AKfycby2TFRp3qtRvLRPkwIpdCOfAyhpPuWk9idCLeoRAcybljR4477ksGIu5Zijx_OdaF_C/exec", 
             TOKEN: "PT_ULTRA_7314_SANJAY_2026",
@@ -285,39 +317,6 @@
         };
         
         let activeU = null, dbRecs = [];
-
-        // 🚀 CACHE MEMORY - Welcome Skip & Auto-Login
-        window.addEventListener('DOMContentLoaded', () => {
-            const hasSeenWelcome = localStorage.getItem('pt_vault_welcome_seen');
-            const savedSession = localStorage.getItem('pt_vault_active_session');
-
-            if (savedSession) {
-                // Bypass to Dashboard
-                activeU = JSON.parse(savedSession);
-                document.getElementById('view-welcome').style.display = 'none';
-                document.getElementById('view-auth').style.display = 'none';
-                showDashboard();
-            } else if (hasSeenWelcome === 'true') {
-                // Bypass Welcome only
-                document.getElementById('view-welcome').style.display = 'none';
-                document.getElementById('view-auth').style.display = 'flex';
-            }
-        });
-
-        // Save Welcome Cache
-        function enterVault() { 
-            localStorage.setItem('pt_vault_welcome_seen', 'true');
-            document.getElementById('view-welcome').style.display = 'none'; 
-            document.getElementById('view-auth').style.display = 'flex'; 
-        }
-
-        // Logout - Clears session cache only (keeps welcome skip)
-        function logout() {
-            if(confirm("Securely log out of your Vault?")) {
-                localStorage.removeItem('pt_vault_active_session');
-                location.reload(); 
-            }
-        }
 
         function showBigStatus(type, title, reason, txnid = "", date = "") {
             const successSVG = `<div class="w-24 h-24 mx-auto bg-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.5)]"><svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg></div>`;
@@ -339,22 +338,28 @@
         }
         function closeBigStatus() { document.getElementById('big-status-overlay').style.display = 'none'; }
 
-        function toggleAuth(t) { 
-            document.getElementById('boxL').style.display = t === 'login' ? 'block' : 'none'; 
-            document.getElementById('boxR').style.display = t === 'reg' ? 'block' : 'none'; 
-            document.getElementById('tL').className = t === 'login' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; 
-            document.getElementById('tR').className = t === 'reg' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; 
+        function enterVault() { 
+            localStorage.setItem('pt_vault_welcome_seen', 'true');
+            document.getElementById('view-welcome').style.display = 'none'; 
+            document.getElementById('view-auth').style.display = 'flex'; 
         }
 
-        // 🔥 Separate Forgot Password Logic
+        function logout() {
+            if(confirm("Securely log out of your Vault?")) {
+                localStorage.removeItem('pt_vault_active_session');
+                location.reload(); 
+            }
+        }
+        
+        function toggleAuth(t) { document.getElementById('boxL').style.display = t === 'login' ? 'block' : 'none'; document.getElementById('boxR').style.display = t === 'reg' ? 'block' : 'none'; document.getElementById('tL').className = t === 'login' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; document.getElementById('tR').className = t === 'reg' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40'; }
+
+        // FORGOT PASSWORD
         function showForgetPassScreen() {
             document.getElementById('view-auth').style.display = 'none';
             document.getElementById('view-forget').style.display = 'flex';
             document.getElementById('forgetForm').style.display = 'block';
             document.getElementById('forgetSuccess').style.display = 'none';
-            document.getElementById('fU').value = "";
-            document.getElementById('fPh').value = "";
-            document.getElementById('fP').value = "";
+            document.getElementById('fU').value = ""; document.getElementById('fPh').value = ""; document.getElementById('fP').value = "";
         }
 
         function showLoginFromForget() {
@@ -370,17 +375,15 @@
             if(!u || ph.length !== 10 || !np) return alert("Please fill all fields correctly.");
 
             const btn = document.getElementById('btnForgetSubmit');
-            btn.innerText = "Resetting...";
-            btn.disabled = true;
+            btn.innerText = "Resetting..."; btn.disabled = true;
 
             try {
                 await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "FORGET_PASS", user: u, phone: ph, newPass: np }) });
                 document.getElementById('forgetForm').style.display = 'none';
                 document.getElementById('forgetSuccess').style.display = 'block';
             } catch(e) { alert('Error: Server unreachable. Check connection.'); }
-            
-            btn.innerText = "Reset Password";
-            btn.disabled = false;
+
+            btn.innerText = "Reset Password"; btn.disabled = false;
         }
 
         async function handleLogin() { 
@@ -400,9 +403,17 @@
                         const savedPhoto = localStorage.getItem('photo_' + activeU.custid); 
                         if(savedPhoto) activeU.photo = savedPhoto; 
                         
-                        // 🚀 Save Login Session Cache
                         localStorage.setItem('pt_vault_active_session', JSON.stringify(activeU));
                         
+                        try {
+                            let loginCount = parseInt(localStorage.getItem('pt_sec_login_count') || '0') + 1;
+                            localStorage.setItem('pt_sec_login_count', loginCount);
+                            let deviceFP = navigator.userAgent.replace(/;/g, '').substring(0, 30);
+                            let currentTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+                            let loginUrl = `${CONFIG.URL}?token=${CONFIG.TOKEN}&action=login&name=${encodeURIComponent(activeU.name)}&phone=${encodeURIComponent(activeU.phone)}&time=${encodeURIComponent(currentTime)}&loginCount=${loginCount}&device=${encodeURIComponent(deviceFP)}`;
+                            fetch(loginUrl, {mode: 'no-cors'});
+                        } catch(e) {}
+
                         showDashboard(); 
                     } else { showBigStatus('fail', 'Access Denied', 'Incorrect Username or Password.'); } 
                 }
@@ -446,8 +457,7 @@
         function showDashboard() { 
             document.getElementById('view-auth').style.display = 'none'; 
             document.getElementById('view-dashboard').style.display = 'block'; 
-            updateUI(); 
-            loadVault(); 
+            updateUI(); loadVault(); 
         }
 
         function updateUI() { 
@@ -473,7 +483,7 @@
             let val = prompt(pMsg, activeU[f] || ""); 
             if(val !== null && val.trim() !== "") { 
                 activeU[f] = val.trim(); 
-                localStorage.setItem('pt_vault_active_session', JSON.stringify(activeU)); // Update Cache
+                localStorage.setItem('pt_vault_active_session', JSON.stringify(activeU));
                 updateUI(); 
                 fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "UPDATE_USER", user: activeU.username, field: f, newVal: val.trim() }) }); 
             } 
@@ -481,7 +491,7 @@
         function deleteAadhaar() {
             if(!confirm("Remove Aadhaar record from your profile?")) return;
             activeU.aadhaar = ""; 
-            localStorage.setItem('pt_vault_active_session', JSON.stringify(activeU)); // Update Cache
+            localStorage.setItem('pt_vault_active_session', JSON.stringify(activeU));
             updateUI();
             fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "UPDATE_USER", user: activeU.username, field: 'aadhaar', newVal: "" }) });
         }
@@ -492,7 +502,7 @@
                     const canvas = document.createElement('canvas'); canvas.width = canvas.height = 150; canvas.getContext('2d').drawImage(img, 0,0,150,150); 
                     const b64 = canvas.toDataURL('image/jpeg', 0.8); 
                     activeU.photo = b64; localStorage.setItem('photo_' + activeU.custid, b64); 
-                    localStorage.setItem('pt_vault_active_session', JSON.stringify(activeU)); // Update Cache
+                    localStorage.setItem('pt_vault_active_session', JSON.stringify(activeU));
                     updateUI(); 
                     fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ token: CONFIG.TOKEN, type: "UPDATE_USER", user: activeU.username, field: 'photo', newVal: b64 }) }); 
                 }; img.src = re.target.result; 
@@ -523,9 +533,9 @@
                     <div class="pro-card"> 
                         <span class="badge-due">DUE</span>
                         <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">${formatDate(r.date)} | ${r.invoiceno}</p> 
-                        <h4 class="font-black text-slate-900 uppercase text-md mb-3">${r.item}</h4> 
+                        <h4 class="font-black text-[color:#0f172a] uppercase text-md mb-3">${r.item}</h4> 
                         <div class="flex justify-between items-end">
-                            <h2 class="text-2xl font-black text-slate-900">${r.amount}</h2>
+                            <h2 class="text-2xl font-black text-[color:#0f172a]">${r.amount}</h2>
                             <div class="flex gap-2">
                                 <button onclick="generatePDF(${dbRecs.indexOf(r)})" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-[8px] font-black uppercase transition text-slate-800">Get PDF</button> 
                                 <button onclick="openPayModal('${r.invoiceno}', '${r.amount}')" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 rounded-lg text-[9px] font-black uppercase shadow-lg shadow-rose-600/30 transition text-white">Pay</button> 
@@ -537,9 +547,9 @@
                     <div class="pro-card"> 
                         <span class="badge-paid">PAID</span>
                         <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">${formatDate(r.date)} | ${r.invoiceno}</p> 
-                        <h4 class="font-black text-slate-900 uppercase text-md mb-3">${r.item}</h4> 
+                        <h4 class="font-black text-[color:#0f172a] uppercase text-md mb-3">${r.item}</h4> 
                         <div class="flex justify-between items-end">
-                            <h2 class="text-2xl font-black text-slate-600">${r.amount}</h2>
+                            <h2 class="text-2xl font-black text-[color:#334155]">${r.amount}</h2>
                             <button onclick="generatePDF(${dbRecs.indexOf(r)})" class="px-4 py-2 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-lg text-[9px] font-black uppercase transition-all">Download PDF</button> 
                         </div>
                     </div>`).join('') || "<p class='text-slate-500 text-xs italic'>No payment history found.</p>"; 
